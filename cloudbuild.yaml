@@ -1,0 +1,61 @@
+steps:
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 
+           'us-central1-docker.pkg.dev/mcmp-integration-qa/petstoreapp/petstore-image:${COMMIT_SHA}', 
+           '.']
+    id: docker-image-build
+    waitFor: ['-'] 
+  - name: 'gcr.io/cloud-builders/wget'
+    args: ['-qO', 'yq', 'https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64']
+  - name: 'ubuntu'
+    args: ['chmod', 'a+x','yq']
+  - name: 'ubuntu'
+    args: ['ls', '-l' ]
+  - name: 'ubuntu'
+    args: ['./yq']
+  - name: 'ubuntu'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        apt-get update && apt-get install -y wget
+        apt-get update && apt-get install -y curl
+        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.18.3
+        trivy image -f json -o results.json --exit-code 0 --security-checks vuln --timeout 10m --severity HIGH,MEDIUM,LOW us-central1-docker.pkg.dev/mcmp-integration-qa/petstoreapp/petstore-image:${COMMIT_SHA}
+        trivy image --no-progress --ignore-unfixed --exit-code 0 --severity HIGH us-central1-docker.pkg.dev/mcmp-integration-qa/petstoreapp/petstore-image:${COMMIT_SHA}
+        trivy image --no-progress --ignore-unfixed --exit-code 1 --severity CRITICAL us-central1-docker.pkg.dev/mcmp-integration-qa/petstoreapp/petstore-image:${COMMIT_SHA}
+
+    id: trivy-install-scan
+    waitFor: ['docker-image-build']
+
+#sdocker run --rm -v [YOUR_CACHE_DIR]:/root/.cache/ aquasec/trivy:0.18.3 [YOUR_IMAGE_NAME]
+  - id: Docker images
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['image',  'ls']
+
+  # - id: Trivy scan
+
+  #   name: 'gcr.io/cloud-builders/docker'
+  #   # args: ['run','-u','root', '--rm', '-v', '/workspace:/root/.cache/', 'aquasec/trivy:0.18.3', 'image', 'petstore-image:latest']
+  #   args: ['run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image petstore-image']
+  - id: list files
+    name: 'bash'
+    script: |
+      ls -l
+
+  # Docker Push
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 
+           'us-central1-docker.pkg.dev/mcmp-integration-qa/petstoreapp/petstore-image:${COMMIT_SHA}']
+    id: docker-image-push
+  # Deploy docker image to CloudRun
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: ['run','deploy','petstore-cloudrun-deploy','--image','us-central1-docker.pkg.dev/mcmp-integration-qa/petstoreapp/petstore-image:${COMMIT_SHA}','--region','us-central1','--platform','managed','--allow-unauthenticated']
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=us-central1'
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+  
+options:
+  logging: CLOUD_LOGGING_ONLY
