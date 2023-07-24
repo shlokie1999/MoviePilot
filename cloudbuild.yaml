@@ -57,6 +57,13 @@ steps:
   #   env:
   #     - 'CLOUDSDK_COMPUTE_REGION=us-central1'
   #     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+  #Storing scan reports to GCS bucket
+  artifacts:
+    objects:
+      locations: 'gs://trivy_scan_reports_bucket'
+      paths: ['results.json']
+    id: scans_export_gcs
+    
   
 options:
   logging: CLOUD_LOGGING_ONLY
