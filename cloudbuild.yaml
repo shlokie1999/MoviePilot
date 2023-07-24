@@ -62,7 +62,7 @@ artifacts:
   objects:
     locations: 'gs://trivy_scan_reports_bucket'
     paths: ['results.json']
-    id: scans_export_gcs
+    
     
   
 options:
