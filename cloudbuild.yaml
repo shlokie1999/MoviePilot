@@ -60,7 +60,7 @@ steps:
   #Storing scan reports to GCS bucket
 artifacts:
   objects:
-    locations: 'gs://trivy_scan_reports_bucket'
+    location: 'gs://trivy_scan_reports_bucket'
     paths: ['results.json']
     
     
