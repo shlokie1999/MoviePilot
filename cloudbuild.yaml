@@ -45,7 +45,7 @@ steps:
     script: |
       ls -l
 
-  # Docker Push
+  # Docker Push step
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
            'us-central1-docker.pkg.dev/mcmp-integration-qa/petstoreapp/petstore-image:${COMMIT_SHA}']
