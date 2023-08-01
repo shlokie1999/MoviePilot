@@ -27,7 +27,6 @@ steps:
         docker ps
     id: trivy-install-scan
     waitFor: ['docker-image-build']
-    
 - name: 'ubuntu'
     entrypoint: 'bash'
     args:
