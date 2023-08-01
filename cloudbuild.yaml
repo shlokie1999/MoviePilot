@@ -2,7 +2,7 @@ steps:
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 
-           'us-central1-docker.pkg.dev/mcmp-integration-qa/petstoreapp/petstore-image:${COMMIT_SHA}', 
+           'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:${COMMIT_SHA}', 
            '.']
     id: docker-image-build
     waitFor: ['-'] 
@@ -60,7 +60,7 @@ steps:
   # Docker Push step
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
-           'us-central1-docker.pkg.dev/mcmp-integration-qa/petstoreapp/petstore-image:${COMMIT_SHA}']
+           'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:${COMMIT_SHA}']
     id: docker-image-push
   # Deploy docker image to CloudRun
   # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -73,7 +73,7 @@ steps:
 artifacts:
   objects:
     location: 'gs://trivy_scan_reports_bucket'
-    paths: ['results.json']
+    paths: ['report.json']
     
     
   
