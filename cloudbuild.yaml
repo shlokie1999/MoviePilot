@@ -4,7 +4,7 @@ steps:
     args: ['build', '-t', 
            'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:${COMMIT_SHA}', 
            '.']
-    id: docker-build
+    id: docker-build-step
     waitFor: ['-'] 
   - name: 'gcr.io/cloud-builders/wget'
     args: ['-qO', 'yq', 'https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64']
@@ -26,7 +26,7 @@ steps:
         docker run -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:latest
         docker ps
     id: clair-install-scan
-    waitFor: ['docker-build']
+    waitFor: ['docker-build-step']
 - name: 'ubuntu'
     entrypoint: 'bash'
     args:
