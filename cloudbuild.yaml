@@ -25,9 +25,7 @@ steps:
         docker run -d --name clair-db arminc/clair-db:latest
         docker run -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:latest
         docker ps
-    # id: clair-install-scan
-    # waitFor: ['docker-build-step']
-- name: 'ubuntu'
+  - name: 'ubuntu'
     entrypoint: 'bash'
     args:
       - '-c'
