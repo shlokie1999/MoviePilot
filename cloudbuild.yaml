@@ -14,7 +14,7 @@ steps:
     args: ['ls', '-l' ]
   - name: 'ubuntu'
     args: ['./yq']
-  - name: 'ubuntu'
+  - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
     args:
       - '-c'
@@ -38,17 +38,11 @@ steps:
         HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
         echo $HOST_IP
         clair-scanner -c http://localhost:6060 --ip ${HOST_IP} --report="report.json" -t "Critical" mynodeapp:latest
-
-#sdocker run --rm -v [YOUR_CACHE_DIR]:/root/.cache/ aquasec/trivy:0.18.3 [YOUR_IMAGE_NAME]
   - id: Docker images
     name: 'gcr.io/cloud-builders/docker'
     args: ['image',  'ls']
 
-  # - id: Trivy scan
 
-  #   name: 'gcr.io/cloud-builders/docker'
-  #   # args: ['run','-u','root', '--rm', '-v', '/workspace:/root/.cache/', 'aquasec/trivy:0.18.3', 'image', 'petstore-image:latest']
-  #   args: ['run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image petstore-image']
   - id: list files
     name: 'bash'
     script: |
@@ -58,7 +52,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
            'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:${COMMIT_SHA}']
-    id: docker-image-push
+   
   # Deploy docker image to CloudRun
   # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   #   entrypoint: 'gcloud'
@@ -71,8 +65,5 @@ steps:
 #   objects:
 #     location: 'gs://trivy_scan_reports_bucket'
 #     paths: ['report.json']
-    
-    
-  
 options:
   logging: CLOUD_LOGGING_ONLY
