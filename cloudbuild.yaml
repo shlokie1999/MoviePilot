@@ -19,16 +19,28 @@ steps:
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y wget
-        apt-get update && apt-get install -y curl
-        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.18.3
-        trivy image -f json -o results.json --exit-code 0 --security-checks vuln --timeout 10m --severity HIGH,MEDIUM,LOW us-central1-docker.pkg.dev/mcmp-integration-qa/petstoreapp/petstore-image:${COMMIT_SHA}
-        trivy image --no-progress --ignore-unfixed --exit-code 0 --severity HIGH us-central1-docker.pkg.dev/mcmp-integration-qa/petstoreapp/petstore-image:${COMMIT_SHA}
-        trivy image --no-progress --ignore-unfixed --exit-code 1 --severity CRITICAL us-central1-docker.pkg.dev/mcmp-integration-qa/petstoreapp/petstore-image:${COMMIT_SHA}
-        ls
-        cat results.json
+        docker pull arminc/clair-local-scan
+        docker pull arminc/clair-db
+        docker images
+        docker run -d --name clair-db arminc/clair-db:latest
+        docker run -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:latest
+        docker ps
     id: trivy-install-scan
     waitFor: ['docker-image-build']
+    
+- name: 'ubuntu'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        sudo curl -L https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64 -o /usr/bin/clair-scanner
+        sudo chmod 777 /usr/bin/clair-scanner
+        clair-scanner -h
+        ls
+        docker images
+        HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
+        echo $HOST_IP
+        clair-scanner -c http://localhost:6060 --ip ${HOST_IP} --report="report.json" -t "Critical" mynodeapp:latest
 
 #sdocker run --rm -v [YOUR_CACHE_DIR]:/root/.cache/ aquasec/trivy:0.18.3 [YOUR_IMAGE_NAME]
   - id: Docker images
