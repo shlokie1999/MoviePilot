@@ -36,7 +36,7 @@ steps:
         ls
         docker images
         # HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
-        echo $HOST_IP
+        # echo $HOST_IP
         clair-scanner -c http://localhost:6060 --ip ${HOST_IP} --report="report.json" -t "Critical" mynodeapp:latest
   - id: Docker images
     name: 'gcr.io/cloud-builders/docker'
