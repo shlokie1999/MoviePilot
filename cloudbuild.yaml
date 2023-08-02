@@ -35,27 +35,17 @@ steps:
         clair-scanner -h
         ls
         docker images
-        # HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
-        # echo $HOST_IP
-        # clair-scanner -c http://localhost:6060 --ip ${HOST_IP} --report="report.json" -t "Critical" mynodeapp:latest
   - id: Docker images
     name: 'gcr.io/cloud-builders/docker'
     args: ['image',  'ls']
-
-
   - id: list files
     name: 'bash'
     script: |
       ls -l
-
   # Docker Push step
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
            'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:${COMMIT_SHA}']
-   
-# substitutions:
-#   HOST_IP: (ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
-  #Storing scan reports to GCS bucket
 artifacts:
   objects:
     location: 'gs://clair_scan_reports_bucket'
