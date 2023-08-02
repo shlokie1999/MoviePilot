@@ -53,7 +53,8 @@ steps:
     args: ['push', 
            'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:${COMMIT_SHA}']
    
- 
+substitutions:
+  HOST_IP: (ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
   #Storing scan reports to GCS bucket
 artifacts:
   objects:
