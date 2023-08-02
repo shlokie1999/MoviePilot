@@ -14,8 +14,8 @@ steps:
     args: ['ls', '-l' ]
   - name: 'ubuntu'
     args: ['./yq']
-  - name: 'gcr.io/cloud-builders/docker'
-    # entrypoint: 'bash'
+  - name: 'ubuntu'
+    entrypoint: 'bash'
     args:
       - '-c'
       - |
