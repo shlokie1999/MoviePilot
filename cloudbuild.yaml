@@ -15,7 +15,7 @@ steps:
   - name: 'ubuntu'
     args: ['./yq']
   - name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'bash'
+    # entrypoint: 'bash'
     args:
       - '-c'
       - |
@@ -53,17 +53,11 @@ steps:
     args: ['push', 
            'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:${COMMIT_SHA}']
    
-  # Deploy docker image to CloudRun
-  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  #   entrypoint: 'gcloud'
-  #   args: ['run','deploy','petstore-cloudrun-deploy','--image','us-central1-docker.pkg.dev/mcmp-integration-qa/petstoreapp/petstore-image:${COMMIT_SHA}','--region','us-central1','--platform','managed','--allow-unauthenticated']
-  #   env:
-  #     - 'CLOUDSDK_COMPUTE_REGION=us-central1'
-  #     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+ 
   #Storing scan reports to GCS bucket
-# artifacts:
-#   objects:
-#     location: 'gs://trivy_scan_reports_bucket'
-#     paths: ['report.json']
+artifacts:
+  objects:
+    location: 'gs://clair_scan_reports_bucket'
+    paths: ['report.json']
 options:
   logging: CLOUD_LOGGING_ONLY
