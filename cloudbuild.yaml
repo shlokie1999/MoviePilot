@@ -35,6 +35,12 @@ steps:
         clair-scanner -h
         ls
         docker images
+        cat /etc/lsb-release
+        sudo apt-get update
+        sudo apt-get install -y iproute2
+        HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
+        echo $HOST_IP
+        clair-scanner -c http://localhost:6060 --ip ${HOST_IP} --report="report.json" -t "Defcon1" app-image:latest
   - id: Docker images
     name: 'gcr.io/cloud-builders/docker'
     args: ['image',  'ls']
