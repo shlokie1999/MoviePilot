@@ -40,7 +40,7 @@ steps:
         cat /etc/lsb-release
         apt-get update
         apt-get install -y iproute2
-        HOST_IP=$HOST_IP
+        HOST_IP=ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+'
         echo $HOST_IP
         clair-scanner -c http://localhost:6060 --ip ${HOST_IP} --report="report.json" -t "High" app-image:latest
     env:
@@ -56,8 +56,8 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
            'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:${COMMIT_SHA}']
-substitutions:
-  HOST_IP: (ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
+# substitutions:
+#   HOST_IP: ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+'
 artifacts:
   objects:
     location: 'gs://clair_scan_report_bucket'
