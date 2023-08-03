@@ -43,15 +43,6 @@ steps:
         HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
         echo $HOST_IP
         clair-scanner -c http://localhost:6060 --ip ${HOST_IP} --report="report.json" -t "High" app-image:latest
-   # - name: 'gcr.io/cloud-builders/docker'
-   #   args: ['ip','-4','addr','show','docker0','|','grep','-Po','inet \k[\d.]+']
-   # - name: 'ubuntu'
-   #   entrypoint: 'bash'
-   #   args:
-   #     - '-c'
-   #     - |
-   #       echo $HOST_IP
-   #       clair-scanner -c http://localhost:6060 --ip ${HOST_IP} --report="report.json" -t "Critical" app-image:latest
    env:
      - "HOST_IP=$HOST_IP"
   - id: Docker images
