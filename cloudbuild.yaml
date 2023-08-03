@@ -31,14 +31,15 @@ steps:
     args:
       - '-c'
       - |
-        sudo curl -L https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64 -o /usr/bin/clair-scanner
-        sudo chmod 777 /usr/bin/clair-scanner
+        apt-get update && apt-get install -y wget
+        apt-get update && apt-get install -y curl
+        curl -L https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64 -o /usr/bin/clair-scanner
+        chmod 777 /usr/bin/clair-scanner
         clair-scanner -h
         ls
-        
         cat /etc/lsb-release
-        sudo apt-get update
-        sudo apt-get install -y iproute2
+        apt-get update
+        apt-get install -y iproute2
         
   - id: Docker images
     name: 'gcr.io/cloud-builders/docker'
