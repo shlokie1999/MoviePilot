@@ -56,6 +56,8 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
            'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:${COMMIT_SHA}']
+substitutions:
+  HOST_IP:(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
 artifacts:
   objects:
     location: 'gs://clair_scan_reports_bucket'
