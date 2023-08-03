@@ -41,7 +41,7 @@ steps:
         apt-get update
         apt-get install -y iproute2
    - name: 'gcr.io/cloud-builders/docker'
-     args: ['ip','-4','addr','show','docker0','|','grep','-Po',''inet \k[\d.]+'']
+     args: ['ip','-4','addr','show','docker0','|','grep','-Po','inet \k[\d.]+']
    - name: 'ubuntu'
      entrypoint: 'bash'
      args:
