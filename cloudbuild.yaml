@@ -15,15 +15,17 @@ steps:
   - name: 'ubuntu'
     args: ['./yq']
   - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - '-c'
-      - |
-        docker pull arminc/clair-local-scan
-        docker pull arminc/clair-db
-        docker images
-        docker run -d --name clair-db arminc/clair-db:latest
-        docker run -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:latest
-        docker ps
+    args: ['pull' , 'arminc/clair-local-scan']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['pull' , 'arminc/clair-db']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['images']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['run' ,'-d','--name','clair-db', 'arminc/clair-db:latest']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['run' ,'-p','6060:6060','--link','clair-db:postgres','-d','--name','clair', 'arminc/clair-local-scan:latest']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['ps']
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
@@ -33,7 +35,7 @@ steps:
         sudo chmod 777 /usr/bin/clair-scanner
         clair-scanner -h
         ls
-        docker images
+        
         cat /etc/lsb-release
         sudo apt-get update
         sudo apt-get install -y iproute2
