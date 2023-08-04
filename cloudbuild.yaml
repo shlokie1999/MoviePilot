@@ -40,16 +40,20 @@ steps:
         cat /etc/lsb-release
         apt-get update
         apt-get install -y iproute2
-        lsb_release -a
-        -s
-        cd ~
+        # lsb_release -a
+        # -s
+        # cd ~
         apt update
-        apt install apt-transport-https ca-certificates curl software-properties-common
-        apt-get update
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-        add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
-        apt-cache policy docker-ce
-        apt install docker-ce
+        gpg --dearmor -o /etc/apt/trusted.gpg.d/docker-archive-keyring.gpg
+        add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+        apt install update
+        apt install docker-ce docker-ce-cli containerd.io
+        # apt install apt-transport-https ca-certificates curl software-properties-common
+        # apt-get update
+        # curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+        # add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+        # apt-cache policy docker-ce
+        # apt install docker-ce
         docker images
         # _HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
         # echo $_HOST_IP
