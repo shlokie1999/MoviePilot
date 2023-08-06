@@ -44,6 +44,13 @@ steps:
         systemctl start docker
         systemctl enable docker
         docker --version
+        curl -L https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64 -o /usr/bin/clair-scanner
+        chmod 777 /usr/bin/clair-scanner
+        clair-scanner -h
+        ls
+        docker images
+        cat /etc/lsb-release
+        apt-get update
         apt-get install -y iproute2
         _MY_IP=$(ifconfig eth0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
         echo $_MY_IP
