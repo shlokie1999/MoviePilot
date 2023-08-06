@@ -44,11 +44,14 @@ steps:
         systemctl start docker
         systemctl enable docker
         docker --version
+        apt-get install -y iproute2
         _MY_IP=$(ifconfig eth0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
         echo $_MY_IP
         _CLAIR_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair)
         echo $_CLAIR_IP
-        clair-scanner --ip $(ifconfig eth0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1') --clair http://$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair):6060 -t High --reportAll=false us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:${COMMIT_SHA} | tee ./report/clair-image-scan-report.txt   
+        clair-scanner -c http://localhost:6060 --ip $(ifconfig eth0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1') --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:${COMMIT_SHA}
+  
+  - id: list images
     name: 'gcr.io/cloud-builders/docker'
     args: ['image',  'ls']
   - id: list files
