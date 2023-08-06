@@ -52,6 +52,7 @@ steps:
         cat /etc/lsb-release
         apt-get update
         apt-get install -y iproute2
+        service docker start
         _HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
         echo $_HOST_IP
         clair-scanner -c http://localhost:6060 --ip $(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+') --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:${COMMIT_SHA}
