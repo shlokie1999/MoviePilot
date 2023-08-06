@@ -33,9 +33,11 @@ steps:
       - |
         apt-get update && apt-get install -y wget
         apt-get update && apt-get install -y curl
+        apt install sudo
         _DOCKER_GATEWAY=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}")
         echo $_DOCKER_GATEWAY
-        wget -qO clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64 && chmod +x clair-scanner ./clair-scanner --ip=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}") us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:${COMMIT_SHA} || exit 0
+        wget -qO clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64 && chmod +x clair-scanner 
+        ./clair-scanner --ip=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}") us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:${COMMIT_SHA} || exit 0
   - id: Docker images
     name: 'gcr.io/cloud-builders/docker'
     args: ['image',  'ls']
