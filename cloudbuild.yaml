@@ -44,7 +44,7 @@ steps:
         _DOCKER_GATEWAY=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}")
         echo $_DOCKER_GATEWAY
         wget -qO clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64 && chmod +x clair-scanner
-        ./clair-scanner --ip=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}") app-image:latest || exit 0
+        ./clair-scanner --ip=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}") us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:${COMMIT_SHA}:latest || exit 0
         # _HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
         # echo $_HOST_IP
         # clair-scanner -c http://localhost:6060 --ip  --report="report.json" -t "High" app-image:latest
