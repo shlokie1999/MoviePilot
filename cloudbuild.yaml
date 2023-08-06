@@ -2,7 +2,7 @@ steps:
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 
-           'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:${COMMIT_SHA}', 
+           'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:${COMMIT_SHA}', 
            '.']
     id: docker-build-step
     waitFor: ['-'] 
@@ -43,11 +43,11 @@ steps:
         # dpkg-reconfigure -plow debconf
         DOCKER_GATEWAY=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}")
         echo $_DOCKER_GATEWAY
-        wget -qO clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64 && chmod +x clair-scanner
-        ./clair-scanner --ip=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}") us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:${COMMIT_SHA}:latest || exit 0
+        # wget -qO clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64 && chmod +x clair-scanner
+        # ./clair-scanner --ip=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}") us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:${COMMIT_SHA}:latest || exit 0
         # _HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
         # echo $_HOST_IP
-        clair-scanner -c http://localhost:6060 --ip $(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}")  --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:${COMMIT_SHA}:latest
+        clair-scanner -c http://localhost:6060 --ip $(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}")  --report="report.json" -t "High" appimage:latest
   - id: Docker images
     name: 'gcr.io/cloud-builders/docker'
     args: ['image',  'ls']
