@@ -41,7 +41,7 @@ steps:
         # apt-get update
         # apt-get install -y iproute2
         # dpkg-reconfigure -plow debconf
-        _DOCKER_GATEWAY=$ould not save Docker image [us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:1d2dd41d830c3519f606303cfef84e064b1d3ed5:latest]: Error response from daemon: invalid reference format[0m
+        DOCKER_GATEWAY=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}")
         echo $_DOCKER_GATEWAY
         wget -qO clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64 && chmod +x clair-scanner
         ./clair-scanner --ip=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}") us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/app-image:${COMMIT_SHA}:latest || exit 0
