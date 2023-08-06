@@ -39,11 +39,11 @@ steps:
         ls
         cat /etc/lsb-release
         apt-get update
-        # apt-get install -y iproute2
+        apt-get install -y iproute2
         # dpkg-reconfigure -plow debconf
-        # _HOST_IP=$(172.17.0.1)
-        # echo $_HOST_IP
-        clair-scanner -c http://localhost:6060 --ip 172.17.0.1  --report="report.json" -t "High" app-image:latest
+        _HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
+        echo $_HOST_IP
+        clair-scanner -c http://localhost:6060 --ip  --report="report.json" -t "High" app-image:latest
   - id: Docker images
     name: 'gcr.io/cloud-builders/docker'
     args: ['image',  'ls']
