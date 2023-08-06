@@ -34,6 +34,7 @@ steps:
         apt-get update && apt-get install -y wget
         apt-get update && apt-get install -y curl
         apt install sudo
+        apt install net-tools
         apt install -y apt-transport-https ca-certificates curl software-properties-common
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -43,12 +44,11 @@ steps:
         systemctl start docker
         systemctl enable docker
         docker --version
-        _DOCKER_GATEWAY=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}")
-        echo $_DOCKER_GATEWAY
-        wget -qO clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64 && chmod +x clair-scanner
-        ./clair-scanner --ip=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}") us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:${COMMIT_SHA} || exit 0
-        # clair-scanner -c http://localhost:6060 --ip $(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+') --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:${COMMIT_SHA}
-  - id: Docker images
+        _MY_IP=$(ifconfig eth0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+        echo $_MY_IP
+        _CLAIR_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair)
+        echo $_CLAIR_IP
+        clair-scanner --ip $(ifconfig eth0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1') --clair http://$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair):6060 -t High --reportAll=false us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:${COMMIT_SHA} | tee ./report/clair-image-scan-report.txt   
     name: 'gcr.io/cloud-builders/docker'
     args: ['image',  'ls']
   - id: list files
