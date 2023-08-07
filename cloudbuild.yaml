@@ -55,6 +55,7 @@ steps:
     args:
       - '-c'
       - |
+        export _CLAIR_THRESHOLD=$(gcloud secrets versions access latest --secret=clair-threshold-secret)
         _THRESHOLD=${_CLAIR_THRESHOLD:-"High"}  # Default to failing on High severity vulnerabilities
         if [[ "$(jq -r '.vulnerabilities[] | select(.Severity >= "'"$_THRESHOLD"'") | .Severity' /workspace/clair-report.json)" ]]; then
           echo "Failing the build due to critical vulnerabilities found.";
