@@ -29,7 +29,10 @@ services:
       - clairdb:/var/lib/postgresql/data
     networks:
       - clairnet
-
+  scanner:
+    image: quay.io/projectquay/clair-scanner:latest
+    container_name: scanner
+    restart: always
 volumes:
   clairdb:
 
