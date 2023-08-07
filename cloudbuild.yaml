@@ -1,79 +1,62 @@
 steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'install_clair'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - 'docker-compose -f clair-config.yaml up -d'
 
-  # Step 1: Install Clair (Assuming Docker is already installed)
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['pull', 'quay.io/coreos/clair:v4.2.0']
-    timeout: '120s'
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['tag', 'quay.io/coreos/clair:v4.2.0', 'clair:v4.2.0']
+  # Build your Docker image here using 'docker build' or any other method.
+  # Replace the below build step with your actual build step.
 
-  # Step 2: Build your Docker image (Replace [DOCKER_IMAGE_NAME] and [TAG] with appropriate values)
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest', '.']
-    timeout: '1200s'
+    id: 'build_image'
+    args:
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:$COMMIT_SHA'
+      - '.'
 
-  # # Step 3: Push the built image to Artifact Registry
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args: ['push', ']']
-  #   timeout: '120s'
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['pull', 'alpine:latest']
-  # Step 4: Scan the Docker image using Clair
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['run', '--rm', '-d', '--name', 'clair', '-p', '6060:6060', 'clair:v4.2.0', '/clair', '-config', '/config/config.yaml']
-    id: 'start-clair'
-
-  # Step 5: Wait for Clair to start (You can adjust the waiting time as needed)
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['run', '--rm', '--link', 'clair:clair', 'alpine', 'sh', '-c', 'while ! nc -z clair 6060; do sleep 1; done']
-  # Add a retry step to wait for Clair to start (you can adjust the retries and interval as needed)
-  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'scan_image'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        retries=0
-        max_retries=10
-        interval=10
-        while [ $retries -lt $max_retries ]; do
-          docker ps | grep clair && break
-          retries=$((retries + 1))
-          sleep $interval
-        done
-        if [ $retries -eq $max_retries ]; then
-          echo "Failed to start Clair container within the specified retries."
+        # Pull the previously built image
+        docker pull us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:$COMMIT_SHA
+
+        # Scan the image using Clair
+        docker-compose -f clair-config.yaml run --rm scanner
+
+        # Check for critical vulnerabilities
+        _CRITICAL_VULNERABILITIES=$(docker-compose -f clair-config.yaml exec -T scanner /bin/clair-scanner -l clair:6060 -r output.json --threshold="Critical" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:$COMMIT_SHA)
+        if [ -n "$_CRITICAL_VULNERABILITIES" ]; then
+          echo "Found critical vulnerabilities: $_CRITICAL_VULNERABILITIES"
           exit 1
         fi
 
-
-  # Step 6: Scan the Docker image using Clair
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['pull', 'quay.io/coreos/clairctl:v1.4.7']
-    timeout: '120s'
+    id: 'push_image'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:$COMMIT_SHA'
+
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['run', '--rm', '-v', '/workspace:/workspace', '--link', 'clair:clair', 'quay.io/coreos/clairctl:v1.4.7', '-c', 'http://clair:6060', 'analyze', '--report', '/workspace/clair_report.json', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
+    id: 'tag_image'
+    args:
+      - 'tag'
+      - 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:$COMMIT_SHA'
+      - 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest'
 
-  # Step 7: Stop and remove the Clair container
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['stop', 'clair']
-    id: 'stop-clair'
-    waitFor: ['start-clair']
+    id: 'push_latest_image'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest'
 
-  # # Step 8: Fail the build if there are critical vulnerabilities found
-  # - name: 'gcr.io/cloud-builders/gcloud'
-  #   args: ['functions', 'deploy', 'fail-build-if-critical', '--runtime', 'nodejs16', '--trigger-http', '--allow-unauthenticated']
-
-  # # Step 9: Remediation guidance (Example - You can customize this based on the vulnerabilities found)
-  # - name: 'gcr.io/cloud-builders/gcloud'
-  #   args: ['functions', 'deploy', 'remediation-guidance', '--runtime', 'nodejs16', '--trigger-http', '--allow-unauthenticated']
-
-  # # Step 10: Push the scanned Docker image to Artifact Registry
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args: ['tag', 'gcr.io/[PROJECT_ID]/[DOCKER_IMAGE_NAME]:[TAG]', 'gcr.io/[PROJECT_ID]/[DOCKER_IMAGE_NAME]:scanned']
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args: ['push', 'gcr.io/[PROJECT_ID]/[DOCKER_IMAGE_NAME]:scanned']
-
-  # # Step 11: Save reports to GCS bucket
-  # - name: 'gcr.io/cloud-builders/gsutil'
-  #   args: ['cp', 'clair_report.json', 'gs://[YOUR_GCS_BUCKET]/clair_report.json']
-
+artifacts:
+  objects:
+    location: 'gs://clair_scan_report_bucket/reports/'
+    paths:
+      - 'output.json'
