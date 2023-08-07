@@ -48,23 +48,25 @@ steps:
   # Adjust the severity level based on your requirements.
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['secrets', 'versions', 'access', 'latest', '--secret="clair-threshold"']
-    secretEnv: ['CLAIR_THRESHOLD']
+    secretEnv: ['_CLAIR_THRESHOLD']
 
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        _THRESHOLD=${CLAIR_THRESHOLD:-"High"}  # Default to failing on High severity vulnerabilities
+        _THRESHOLD=${_CLAIR_THRESHOLD:-"High"}  # Default to failing on High severity vulnerabilities
         if [[ "$(jq -r '.vulnerabilities[] | select(.Severity >= "'"$_THRESHOLD"'") | .Severity' /workspace/clair-report.json)" ]]; then
           echo "Failing the build due to critical vulnerabilities found.";
           exit 1;
         else
           echo "No critical vulnerabilities found. Continuing with the build.";
         fi
-    secretEnv: ['CLAIR_THRESHOLD']
+    secretEnv: ['_CLAIR_THRESHOLD']
 
   # Docker Push step
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
            'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
+substitutions:
+  _CLAIR_THRESHOLD: "High"  
