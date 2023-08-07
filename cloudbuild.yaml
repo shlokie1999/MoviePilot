@@ -1,20 +1,30 @@
 steps:
-  # Step 1: Build the Docker image
+  # Step 0: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest', '.']
 
-  # Step 3: Install and run Clair to scan the Docker image
+  # Step 1: Install and run Clair to scan the Docker image
+
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'sh'
     args:
       - '-c'
       - |
-        docker pull quay.io/coreos/clair:latest
-        docker create --name clair-scanner -p 6060:6060 quay.io/coreos/clair:latest
-        docker cp clair-scanner:/go/bin/clair /usr/local/bin/clair
+        docker pull arminc/clair-db:latest
+        docker create --name clair-db arminc/clair-db:latest
+        docker pull arminc/clair-local-scan:v2.1.7
+        docker create --name clair-scanner --link clair-db:postgres -p 6060:6060 arminc/clair-local-scan:v2.1.7
+        
+  # Step 2: Run Clair scan on the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        docker cp clair-scanner:/usr/local/bin/clair /usr/local/bin/clair
         docker rm clair-scanner
-        clair-scanner -c http://localhost:6060 --report="clair-scan-report.json" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
-
+        clair-scanner -c http://localhost:6060 --report="clair-scan-report.json" -l clair.log -t "Critical" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
+ 
   # Step 4: Check the scan results for critical vulnerabilities
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['container', 'images', 'describe', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
