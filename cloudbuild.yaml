@@ -12,10 +12,10 @@ steps:
     args: ['build', '-t', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest', '.']
     timeout: '1200s'
 
-  # Step 3: Push the built image to Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/[PROJECT_ID]/[DOCKER_IMAGE_NAME]:[TAG]']
-    timeout: '120s'
+  # # Step 3: Push the built image to Artifact Registry
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args: ['push', ']']
+  #   timeout: '120s'
 
   # Step 4: Scan the Docker image using Clair
   - name: 'gcr.io/cloud-builders/docker'
