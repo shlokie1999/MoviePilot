@@ -58,7 +58,7 @@ steps:
         docker images
         _HOST_IP=$(ifconfig eth0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
         echo $_HOST_IP
-        clair-scanner -c http://localhost:6060 --ip ${_HOST_IP} --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:${COMMIT_SHA}
+        clair-scanner -c http://127.0.0.1:6060 --ip ${_HOST_IP} --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:${COMMIT_SHA}
         cat report.json
 
   - id: list images
