@@ -16,7 +16,8 @@ steps:
   # - name: 'gcr.io/cloud-builders/docker'
   #   args: ['push', ']']
   #   timeout: '120s'
-
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['pull', 'alpine:latest']
   # Step 4: Scan the Docker image using Clair
   - name: 'gcr.io/cloud-builders/docker'
     args: ['run', '--rm', '-d', '--name', 'clair', '-p', '6060:6060', 'clair:v4.2.0', '/clair', '-config', '/config/config.yaml']
