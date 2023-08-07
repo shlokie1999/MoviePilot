@@ -6,14 +6,10 @@ steps:
            '.']
     id: docker-build-step
     waitFor: ['-'] 
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/your-project-id/clair-scanner:latest']
   - name: 'gcr.io/cloud-builders/wget'
     args: ['-qO', 'yq', 'https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64']
-  - name: 'ubuntu'
-    args: ['chmod', 'a+x','yq']
-  - name: 'ubuntu'
-    args: ['ls', '-l' ]
-  - name: 'ubuntu'
-    args: ['./yq']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['pull' , 'arminc/clair-local-scan']
   - name: 'gcr.io/cloud-builders/docker'
@@ -26,18 +22,12 @@ steps:
     args: ['run' ,'-p','6060:6060','--link','clair-db:postgres','-d','--name','clair', 'arminc/clair-local-scan:latest']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['ps']
-  # Step 3: Install Clair Scanner (if not already installed)
   - name: 'gcr.io/cloud-builders/git'
     args: ['clone', 'https://github.com/arminc/clair-scanner.git']
     dir: '/workspace'
-
   # Step 4: Run Clair Scanner against the Docker image
-  - name: 'gcr.io/mcmp-integration-qa/clair-scanner'
-    args:
-      - '--clair="http://127.0.0.1:6060"'  # Replace with the Clair server URL
-      - '--report="/workspace/clair-report.json"'
-      - 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:$COMMIT_SHA'
-
+  - name: 'gcr.io//mcmp-integration-q/clair-scanner'
+    args: ['clair-scanner', '--clair="http://127.0.0.1:6060"', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:$COMMIT_SHA']
   # Step 5: Check for vulnerabilities and fail the pipeline for critical vulnerabilities
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
@@ -51,9 +41,10 @@ steps:
         else
           echo "No critical vulnerabilities found. Proceeding to push the image to Artifact Registry."
         fi
-
   # Docker Push step
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
            'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
-
+  #Save the reports in a GCS bucket
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['cp', '/path/to/clair-report.json', 'gs://clair-scan-report-bucket/clair-reports/']
