@@ -44,6 +44,12 @@ steps:
         systemctl start docker
         systemctl enable docker
         docker --version
+        docker pull arminc/clair-local-scan
+        docker pull arminc/clair-db
+        docker images
+        docker run -d --name clair-db arminc/clair-db:latest
+        docker run -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:latest
+        docker ps
         curl -L https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64 -o /usr/bin/clair-scanner
         chmod 777 /usr/bin/clair-scanner
         clair-scanner -h
