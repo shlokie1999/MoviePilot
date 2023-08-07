@@ -2,7 +2,7 @@ steps:
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 
-           'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest', 
+           'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:$COMMIT_SHA', 
            '.']
     id: docker-build-step
     waitFor: ['-'] 
@@ -26,50 +26,45 @@ steps:
     args: ['run' ,'-p','6060:6060','--link','clair-db:postgres','-d','--name','clair', 'arminc/clair-local-scan:latest']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['ps']
-  - name: 'ubuntu'
+  # Step 3: Install Clair Scanner (if not already installed)
+  - name: 'gcr.io/cloud-builders/git'
+    args: ['clone', 'https://github.com/arminc/clair-scanner.git']
+    dir: '/workspace'
+
+  # Step 4: Run Clair Scanner against the Docker image
+  - name: 'gcr.io/mcmp-integration-qa/clair-scanner'
+    args: [
+      '--clair="http://127.0.0.1:6060"', # Replace with the Clair server URL
+      '--report="/workspace/clair-report.json"',
+      'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:$COMMIT_SHA'
+    ]
+
+  # Step 5: Print the Clair scan report
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'cat'
+    args: ['/workspace/clair-report.json']
+
+  # Step 6: (Optional) Fail the build if critical vulnerabilities are found
+  # Adjust the severity level based on your requirements.
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['secrets', 'versions', 'access', 'latest', '--secret="clair-threshold"']
+    secretEnv: ['CLAIR_THRESHOLD']
+
+  - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y wget
-        apt-get update && apt-get install -y curl
-        apt install sudo
-        apt install net-tools
-        apt install -y apt-transport-https ca-certificates curl software-properties-common
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-        apt update
-        apt install -y docker-ce docker-ce-cli containerd.io
-        systemctl start docker
-        systemctl enable docker
-        docker --version
-        docker run -d --name clair-db arminc/clair-db:latest
-        docker run -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:latest --restart on-failure
-        apt-get install -y iproute2
-        curl -L https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64 -o /usr/bin/clair-scanner
-        chmod 777 /usr/bin/clair-scanner
-        clair-scanner -h
-        ls
-        docker images
-        _HOST_IP=$(ifconfig eth0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-        echo $_HOST_IP
-        _CLAIR_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair)
-        echo $_CLAIR_IP
-        clair-scanner --ip $$(ifconfig eth0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1') --clair http://$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair):6060 -t "High" --report="report.json" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
+        THRESHOLD=${CLAIR_THRESHOLD:-"High"}  # Default to failing on High severity vulnerabilities
+        if [[ "$(jq -r '.vulnerabilities[] | select(.Severity >= "'"$THRESHOLD"'") | .Severity' /workspace/clair-report.json)" ]]; then
+          echo "Failing the build due to critical vulnerabilities found.";
+          exit 1;
+        else
+          echo "No critical vulnerabilities found. Continuing with the build.";
+        fi
+    secretEnv: ['CLAIR_THRESHOLD']
 
-  - id: list images
-    name: 'gcr.io/cloud-builders/docker'
-    args: ['image',  'ls']
-  - id: list files
-    name: 'bash'
-    script: |
-      ls -l
   # Docker Push step
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
            'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
-artifacts:
-  objects:
-    location: 'gs://clair_scan_report_bucket'
-    paths: ['report.json']
