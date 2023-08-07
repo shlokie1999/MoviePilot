@@ -2,7 +2,7 @@ version: '3'
 
 services:
   clair:
-    image: quay.io/projectquay/clair
+    image: quay.io/projectquay/clair:latest
     container_name: clair
     restart: always
     ports:
