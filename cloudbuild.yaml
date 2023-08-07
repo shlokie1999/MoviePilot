@@ -32,7 +32,7 @@ steps:
     dir: '/workspace'
 
   # Step 4: Run Clair Scanner against the Docker image
-  - name: 'gcr.io/us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scanner'
+  - name: 'gcr.io/mcmp-integration-qa/clair-scanner'
     args:
       - '--clair="http://127.0.0.1:6060"'  # Replace with the Clair server URL
       - '--report="/workspace/clair-report.json"'
