@@ -2,7 +2,7 @@ steps:
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 
-           'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest', 
+           'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:${COMMIT_SHA}', 
            '.']
     id: docker-build-step
     waitFor: ['-'] 
@@ -51,13 +51,14 @@ steps:
         docker run -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:v2.0.8_fe9b059d930314b54c78f75afe265955faf4fdc1
         docker pull us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:${COMMIT_SHA}
         apt-get install -y iproute2
-        mkdir clair && cd clair
-        wget https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_386 -O /usr/local/bin/clair-scanner
-        chmod +x /usr/local/bin/clair-scanner
-        _CONTAINER="$(docker ps -a | grep -i "clair-local-scan" | awk ' { print $1 }')"
-        if sudo docker inspect --format="{{.State.Running}}" $_CONTAINER; then docker start $_CONTAINER; else echo "Container is already running, proceed with next command"; fi
-        _IP="$(ip addr show ens3 | awk '$1 == "inet" {gsub(/\/.*$/, "", $2); print $2}')"
-        clair-scanner --ip $_IP -r report.json -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:${COMMIT_SHA}
+        curl -L https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64 -o /usr/bin/clair-scanner
+        chmod 777 /usr/bin/clair-scanner
+        clair-scanner -h
+        ls
+        docker images
+        HOST_IP=$(ifconfig eth0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+        echo $HOST_IP
+        clair-scanner -c http://localhost:6060 --ip ${HOST_IP} --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:${COMMIT_SHA}
         cat report.json
 
   - id: list images
