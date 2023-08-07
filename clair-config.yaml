@@ -30,7 +30,7 @@ services:
     networks:
       - clairnet
   scanner:
-    image: quay.io/projectquay/clair-scanner:latest
+    image: quay.io/projectquay/clair-scanner:v2.0.0
     container_name: scanner
     restart: always
 volumes:
