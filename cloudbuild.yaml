@@ -54,8 +54,8 @@ steps:
         echo $_HOST_IP
         _CLAIR_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair)
         echo $_CLAIR_IP
-        clair-scanner --ip $_HOST_IP --clair http://$_CLAIR_IP:6060 -t "High" --report="report.json" appimage:latest
-        
+        clair-scanner --ip $_HOST_IP --clair http://$_CLAIR_IP:6060 -t "High" --report="report.json" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
+        cat report.json
   - id: list images
     name: 'gcr.io/cloud-builders/docker'
     args: ['image',  'ls']
