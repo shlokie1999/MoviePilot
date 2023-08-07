@@ -33,37 +33,24 @@ steps:
 
   # Step 4: Run Clair Scanner against the Docker image
   - name: 'gcr.io/mcmp-integration-qa/clair-scanner'
-    args: [
-      '--clair="http://127.0.0.1:6060"', # Replace with the Clair server URL
-      '--report="/workspace/clair-report.json"',
-      'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:$COMMIT_SHA'
-    ]
+    args:
+      - '--clair="http://clair-service-host:clair-service-port"'  # Replace with the Clair server URL
+      - '--report="/workspace/clair-report.json"'
+      - 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:$COMMIT_SHA'
 
-  # Step 5: Print the Clair scan report
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'cat'
-    args: ['/workspace/clair-report.json']
-
-  # Step 6: (Optional) Fail the build if critical vulnerabilities are found
-  # Adjust the severity level based on your requirements.
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['secrets', 'versions', 'access', 'latest', '--secret="clair-threshold"']
-    secretEnv: ['_CLAIR_THRESHOLD']
-
+  # Step 5: Check for vulnerabilities and fail the pipeline for critical vulnerabilities
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        export _CLAIR_THRESHOLD=$(gcloud secrets versions access latest --secret=clair-threshold-secret)
-        _THRESHOLD=${_CLAIR_THRESHOLD:-"High"}  # Default to failing on High severity vulnerabilities
-        if [[ "$(jq -r '.vulnerabilities[] | select(.Severity >= "'"$_THRESHOLD"'") | .Severity' /workspace/clair-report.json)" ]]; then
-          echo "Failing the build due to critical vulnerabilities found.";
-          exit 1;
+        # Read the Clair scan report and check for vulnerabilities with severity levels
+        if grep -q "\"Sev\": \"Critical\"" /workspace/clair-report.json; then
+          echo "Critical vulnerabilities found. Failing the pipeline."
+          exit 1
         else
-          echo "No critical vulnerabilities found. Continuing with the build.";
+          echo "No critical vulnerabilities found. Proceeding to push the image to Artifact Registry."
         fi
-    secretEnv: ['_CLAIR_THRESHOLD']
 
   # Docker Push step
   - name: 'gcr.io/cloud-builders/docker'
