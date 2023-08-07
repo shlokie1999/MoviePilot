@@ -30,9 +30,13 @@ services:
     networks:
       - clairnet
   scanner:
-    image: quay.io/projectquay/clair-scanner:v2.0.0
+    image: quay.io/projectquay/clair-scanner:latest
     container_name: scanner
     restart: always
+    environment:
+      # Replace 'YOUR_QUAY_IO_USERNAME' and 'YOUR_QUAY_IO_PASSWORD' with your actual credentials.
+      QUAY_IO_USERNAME: agarwal_shlok0912
+      QUAY_IO_PASSWORD: Hotglacier@100
 volumes:
   clairdb:
 
