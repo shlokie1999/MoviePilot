@@ -25,6 +25,25 @@ steps:
   # Step 5: Wait for Clair to start (You can adjust the waiting time as needed)
   - name: 'gcr.io/cloud-builders/docker'
     args: ['run', '--rm', '--link', 'clair:clair', 'alpine', 'sh', '-c', 'while ! nc -z clair 6060; do sleep 1; done']
+  # Add a retry step to wait for Clair to start (you can adjust the retries and interval as needed)
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        retries=0
+        max_retries=10
+        interval=10
+        while [ $retries -lt $max_retries ]; do
+          docker ps | grep clair && break
+          retries=$((retries + 1))
+          sleep $interval
+        done
+        if [ $retries -eq $max_retries ]; then
+          echo "Failed to start Clair container within the specified retries."
+          exit 1
+        fi
+
 
   # Step 6: Scan the Docker image using Clair
   - name: 'gcr.io/cloud-builders/docker'
