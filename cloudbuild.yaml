@@ -12,9 +12,10 @@ steps:
       - |
         docker pull arminc/clair-db:latest
         docker create --name clair-db arminc/clair-db:latest
-        docker pull arminc/clair-local-scan:v2.1.7
-        docker create --name clair-scanner --link clair-db:postgres -p 6060:6060 arminc/clair-local-scan:v2.1.7
-        
+        docker pull arminc/clair-local-scan:latest
+        docker create --name clair-scanner --link clair-db:postgres -p 6060:6060 arminc/clair-local-scan:latest
+        docker run -d --name clair-db arminc/clair-db:latest
+        docker run -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:latest
   # Step 2: Run Clair scan on the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'sh'
