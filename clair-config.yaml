@@ -2,7 +2,7 @@ version: '3'
 
 services:
   clair:
-    image: quay.io/coreos/clair:v4.0.0
+    image: quay.io/coreos/clair:latest
     container_name: clair
     restart: always
     ports:
