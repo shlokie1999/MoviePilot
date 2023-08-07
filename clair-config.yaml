@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  clair:
+    image: quay.io/coreos/clair:v4.0.0
+    container_name: clair
+    restart: always
+    ports:
+      - 6060:6060
+    depends_on:
+      - postgres
+    environment:
+      CLAIR_API_TIMEOUT: 900s
+      CLAIR_HEALTH_PORT: 6061
+      CLAIR_HEALTH_TIMEOUT: 30s
+      DATABASE_URL: postgres://postgres:password@postgres:5432/clair?sslmode=disable
+      # Add any additional environment variables as needed
+    networks:
+      - clairnet
+
+  postgres:
+    image: postgres:12.4
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: clair
+      POSTGRES_PASSWORD: password
+    volumes:
+      - clairdb:/var/lib/postgresql/data
+    networks:
+      - clairnet
+
+volumes:
+  clairdb:
+
+networks:
+  clairnet:
