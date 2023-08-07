@@ -36,7 +36,7 @@ services:
     environment:
       # Replace 'YOUR_QUAY_IO_USERNAME' and 'YOUR_QUAY_IO_PASSWORD' with your actual credentials.
       QUAY_IO_USERNAME: agarwal_shlok0912
-      QUAY_IO_PASSWORD: Hotglacier@100
+      QUAY_IO_PASSWORD: aZPtky3WEO1k+ut2JIa2dlbxuCPq+RSpKNsMMIYy/RrFeIQj+0OIGnEU+yQgwjX6
 volumes:
   clairdb:
 
