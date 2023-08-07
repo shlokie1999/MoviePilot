@@ -75,5 +75,3 @@ artifacts:
   objects:
     location: 'gs://clair_scan_report_bucket'
     paths: ['report.json']
-options:
-  logging: CLOUD_LOGGING_ONLY
