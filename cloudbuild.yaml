@@ -55,8 +55,8 @@ steps:
     args:
       - '-c'
       - |
-        THRESHOLD=${CLAIR_THRESHOLD:-"High"}  # Default to failing on High severity vulnerabilities
-        if [[ "$(jq -r '.vulnerabilities[] | select(.Severity >= "'"$THRESHOLD"'") | .Severity' /workspace/clair-report.json)" ]]; then
+        _THRESHOLD=${CLAIR_THRESHOLD:-"High"}  # Default to failing on High severity vulnerabilities
+        if [[ "$(jq -r '.vulnerabilities[] | select(.Severity >= "'"$_THRESHOLD"'") | .Severity' /workspace/clair-report.json)" ]]; then
           echo "Failing the build due to critical vulnerabilities found.";
           exit 1;
         else
