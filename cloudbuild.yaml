@@ -14,7 +14,7 @@ steps:
         docker create --name clair-db arminc/clair-db:latest
         docker pull arminc/clair-local-scan:latest
         docker create --name clair-scanner --link clair-db:postgres -p 6060:6060 arminc/clair-local-scan:latest
-        
+      
    - name: 'ubuntu'
      entrypoint: 'bash'
      args:
