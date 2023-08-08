@@ -9,9 +9,9 @@ steps:
     args:
       - '-c'
       - |
-        docker run -d --name clair-container -p 6060:6060 -p 6061:6061 quay.io/coreos/clair:v4.0.5
-        docker run --network host --rm -it -v /var/run/docker.sock:/var/run/docker.sock quay.io/coreos/clair:v4.0.5
-        /bin/clair-scanner -c http://localhost:6060 -t "High" --report="clair-scan-report.json" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest 
+        docker run -d --name clair-container -p 6060:6060 -p 6061:6061 quay.io/quay/clair:v4.2.0
+        docker run --network host --rm -it -v /var/run/docker.sock:/var/run/docker.sock quay.io/quay/clair:v4.2.0
+        clair-scanner -c http://localhost:6060 -t "High" --report="clair-scan-report.json" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest 
   # Step 1: Install and run Clair to scan the Docker image
 
   # - name: 'gcr.io/cloud-builders/docker'
