@@ -32,9 +32,15 @@ steps:
   #       echo $_HOST_IP
         
   #       clair-scanner -c http://localhost:6060 --ip ${_HOST_IP} --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args: ['run', '--rm', '-v', '/var/run/docker.sock:/var/run/docker.sock', 'quay.io/coreos/clair:v2.1.7', '-c', 'http://clair:6060', '-r', 'report.json','-t','High', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['run', '--rm', '-v', '/var/run/docker.sock:/var/run/docker.sock', 'quay.io/coreos/clair:v2.1.7', '-c', 'http://clair:6060', '-r', 'report.json','-t','High', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
-  
+    args: ['run', '--rm', '-d', '-p', '6060:6060', '--name', 'clair', 'quay.io/coreos/clair:v2.1.7']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['run', '--rm', '--net', 'host', '-v', '/var/run/docker.sock:/var/run/docker.sock', 'arminc/clair-scanner:v12', '-c', 'http://localhost:6060', '-r', 'report.json', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
+
+```
   # Step 4: Check the scan results for critical vulnerabilities
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['container', 'images', 'describe', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
