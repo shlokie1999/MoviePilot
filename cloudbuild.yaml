@@ -38,7 +38,7 @@ steps:
     args: ['run', '--rm', '-d', '-p', '6060:6060', '--name', 'clair', 'quay.io/coreos/clair:v2.1.7']
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['run', '--rm', '--net', 'host', '-v', '/var/run/docker.sock:/var/run/docker.sock', 'quay.io/coreos/clair:v2.1.7', '-c', 'http://localhost:6060', '-r', 'report.json', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
+    args: ['run', '--rm', '--net', 'host', '-v', '/var/run/docker.sock:/var/run/docker.sock', 'quay.io/coreos/clair:v2.1.7', '-c', '"http://localhost:6060"', '-r', 'report.json', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
 
   # Step 4: Check the scan results for critical vulnerabilities
   - name: 'gcr.io/cloud-builders/gcloud'
