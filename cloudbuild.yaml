@@ -40,7 +40,6 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['run', '--rm', '--net', 'host', '-v', '/var/run/docker.sock:/var/run/docker.sock', 'arminc/clair-scanner:v12', '-c', 'http://localhost:6060', '-r', 'report.json', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
 
-```
   # Step 4: Check the scan results for critical vulnerabilities
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['container', 'images', 'describe', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
