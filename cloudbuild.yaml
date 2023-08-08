@@ -5,23 +5,30 @@ steps:
 
   # Step 1: Install and run Clair to scan the Docker image
 
-  - name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'sh'
-    args:
-      - '-c'
-      - |
-        docker pull arminc/clair-db:latest
-        docker create --name clair-db arminc/clair-db:latest
-        docker pull arminc/clair-local-scan:latest
-        docker create --name clair-scanner --link clair-db:postgres -p 6060:6060 arminc/clair-local-scan:latest
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   entrypoint: 'sh'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       docker pull arminc/clair-db:latest
+  #       docker create --name clair-db arminc/clair-db:latest
+  #       docker pull arminc/clair-local-scan:latest
+  #       docker create --name clair-scanner --link clair-db:postgres -p 6060:6060 arminc/clair-local-scan:latest
       
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y wget
-        apt-get update && apt-get install -y curl
+        apt-get update
+        apt-get install -y docker.io
+        docker run -d -p 80:80 nginx
+        docker pull arminc/clair-db:latest
+        docker create --name clair-db arminc/clair-db:latest
+        docker pull arminc/clair-local-scan:latest
+        docker create --name clair-scanner --link clair-db:postgres -p 6060:6060 arminc/clair-local-scan:latest
+        apt-get install -y wget
+        apt-get install -y curl
         apt install net-tools
         curl -L https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64 -o /usr/bin/clair-scanner
         chmod 777 /usr/bin/clair-scanner
@@ -29,7 +36,7 @@ steps:
         cat /etc/lsb-release
         apt-get update
         apt-get install -y iproute2
-        _HOST_IP=$(curl --silent http://metadata/computeMetadata/v1/instance/network-interfaces/0/ip)
+        _HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
         echo $_HOST_IP
         clair-scanner -c http://localhost:6060 --ip ${_HOST_IP} --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
   
