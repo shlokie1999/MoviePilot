@@ -25,7 +25,12 @@ steps:
         curl -L https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64 -o /usr/bin/clair-scanner
         chmod 777 /usr/bin/clair-scanner
         clair-scanner -h  
-        clair-scanner -c http://127.0.0.1:9279 --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
+        cat /etc/lsb-release
+        apt-get update
+        apt-get install -y iproute2
+        _HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
+        echo $_HOST_IP
+        clair-scanner -c http://localhost:6060 --ip ${_HOST_IP} --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
   
   # Step 4: Check the scan results for critical vulnerabilities
   - name: 'gcr.io/cloud-builders/gcloud'
