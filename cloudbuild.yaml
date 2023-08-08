@@ -10,8 +10,8 @@ steps:
       - '-c'
       - |
         docker login -u agarwal_shlok0912 -p aZPtky3WEO1k+ut2JIa2dlbxuCPq+RSpKNsMMIYy/RrFeIQj+0OIGnEU+yQgwjX6 quay.io
-        docker run -d --name clair-container -p 6060:6060 -p 6061:6061 quay.io/quay/clair:latest
-        docker run --network host --rm -it -v /var/run/docker.sock:/var/run/docker.sock quay.io/quay/clair:latest
+        docker run -d --name clair-container -p 6060:6060 -p 6061:6061 quay.io/quay/clair:v4.2.0
+        docker run --network host --rm -it -v /var/run/docker.sock:/var/run/docker.sock quay.io/quay/clair:v4.2.0
         clair-scanner -c http://localhost:6060 -t "High" --report="clair-scan-report.json" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest 
   # Step 1: Install and run Clair to scan the Docker image
 
