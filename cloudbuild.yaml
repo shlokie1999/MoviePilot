@@ -49,7 +49,8 @@ steps:
         
         ls
         docker images
-        # ip -4 addr show docker0
+        
+        ip addr show
         ifconfig
         _HOST_IP=$(ifconfig eth0 | awk -F ' *|:' '/inet addr/{print $4}')
         echo $_HOST_IP
