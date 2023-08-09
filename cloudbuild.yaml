@@ -16,6 +16,7 @@ steps:
         apt-get install -y wget
         apt-get install -y curl
         apt-get -y install lsof
+        apt-get  -y install telnet
         apt-get install iproute2 -y
         apt-get install ca-certificates curl gnupg -y
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
@@ -36,7 +37,13 @@ steps:
         curl -L https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64 -o /usr/bin/clair-scanner
         chmod 777 /usr/bin/clair-scanner
         clair-scanner -h
+        
+        echo "telnet 127.0.0.1 6060"
+        telnet 127.0.0.1 6060
 
+        echo "telnet 192.168.10.2 6060"
+        telnet 192.168.10.2 6060
+        
         echo "lsof -i tcp:6060"
         lsof -i tcp:6060
         
