@@ -79,7 +79,7 @@ steps:
         ifconfig
         _HOST_IP=$(ifconfig eth0 | awk -F ' *|:' '/inet addr/{print $4}')
         echo $_HOST_IP
-        clair-scanner -c http://192.168.10.4:6060 --ip host.docker.internal --report="report.json" -t "High" mongo-express:latest
+        clair-scanner -c http://192.168.10.4:6060 --ip 192.168.10.2 --report="report.json" -t "High" mongo-express:latest
 
   # - name: 'gcr.io/cloud-builders/docker'
   #   entrypoint: 'bash'
