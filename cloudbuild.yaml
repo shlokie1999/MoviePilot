@@ -61,6 +61,10 @@ steps:
         echo "_CLAIR_CONTAINER_IP"
         echo "${_CLAIR_CONTAINER_IP}"
 
+        echo "docker inspect clair"
+        docker inspect clair
+        docker inspect clair | grep "IPAddress"
+
         echo "lsof -i tcp:6060"
         lsof -i tcp:6060
         
