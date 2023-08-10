@@ -26,6 +26,9 @@ steps:
         docker run hello-world
         docker pull arminc/clair-local-scan
         docker pull arminc/clair-db
+
+        docker pull mongo-express:latest
+        
         docker images
         docker run --network=cloudbuild -d --name clair-db arminc/clair-db:latest 
         docker run --network=cloudbuild -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:latest
@@ -76,7 +79,7 @@ steps:
         ifconfig
         _HOST_IP=$(ifconfig eth0 | awk -F ' *|:' '/inet addr/{print $4}')
         echo $_HOST_IP
-        clair-scanner -c http://192.168.10.4:6060 --ip host.docker.internal --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
+        clair-scanner -c http://192.168.10.4:6060 --ip host.docker.internal --report="report.json" -t "High" mongo-express:latest
 
   # - name: 'gcr.io/cloud-builders/docker'
   #   entrypoint: 'bash'
