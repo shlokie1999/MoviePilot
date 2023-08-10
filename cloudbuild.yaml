@@ -125,5 +125,5 @@ steps:
 
   # Step 7: Store the scan report in a GCS bucket
   - name: 'gcr.io/cloud-builders/gsutil'
-    args: ['cp', 'clair-scan-report.json', 'gs://clair-scan-report-bucket/clair-scan-report.json']
+    args: ['cp', 'report.json', 'gs://clair_scan_report_bucket/report.json']
 
