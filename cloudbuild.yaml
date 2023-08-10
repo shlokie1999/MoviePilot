@@ -27,16 +27,22 @@ steps:
         docker pull arminc/clair-local-scan
         docker pull arminc/clair-db
         docker images
-        docker run -d --name clair-db arminc/clair-db:latest
-        docker run -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:latest
+        docker run --network=cloudbuild -d --name clair-db arminc/clair-db:latest 
+        docker run --network=cloudbuild -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:latest
 
         echo "docker ps"
         docker ps
+        
         sleep 20
         echo "docker ps -a "
         docker ps -a 
+        
         echo "docker logs clair"
         docker logs clair
+
+        echo "docker network ls"
+        docker network ls
+        
         curl -L https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64 -o /usr/bin/clair-scanner
         chmod 777 /usr/bin/clair-scanner
         clair-scanner -h
@@ -57,7 +63,7 @@ steps:
         ifconfig
         _HOST_IP=$(ifconfig eth0 | awk -F ' *|:' '/inet addr/{print $4}')
         echo $_HOST_IP
-        clair-scanner -c http://127.0.0.1:6060 --ip "127.0.0.1" --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-sca
+        clair-scanner -c http://192.168.10.2:6060 --ip "localhost" --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-sca
 
   # - name: 'gcr.io/cloud-builders/docker'
   #   entrypoint: 'bash'
