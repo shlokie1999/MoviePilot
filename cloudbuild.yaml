@@ -30,6 +30,8 @@ steps:
         docker run --network=cloudbuild -d --name clair-db arminc/clair-db:latest 
         docker run --network=cloudbuild -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:latest
 
+        CLAIR_CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair)
+
         echo "docker ps"
         docker ps
         
@@ -52,6 +54,11 @@ steps:
 
         echo "telnet 192.168.10.2 6060"
         telnet 192.168.10.2 6060
+
+        echo "telnet CLAIR_CONTAINER_IP 6060"
+        telnet $CLAIR_CONTAINER_IP 6060
+
+        
         
         echo "lsof -i tcp:6060"
         lsof -i tcp:6060
@@ -63,7 +70,7 @@ steps:
         ifconfig
         _HOST_IP=$(ifconfig eth0 | awk -F ' *|:' '/inet addr/{print $4}')
         echo $_HOST_IP
-        clair-scanner -c http://192.168.10.2:6060 --ip "localhost" --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
+        clair-scanner -c http://${CLAIR_CONTAINER_IP}:6060 --ip "localhost" --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
 
   # - name: 'gcr.io/cloud-builders/docker'
   #   entrypoint: 'bash'
