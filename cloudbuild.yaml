@@ -65,10 +65,11 @@ steps:
         echo $_HOST_IP
         clair-scanner -c http://192.168.10.4:6060 --ip 192.168.10.2 --report="report.json" -t "Critical" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
 
-    # Remediation guidance
-    - name: 'gcr.io/cloud-builders/gcloud'
-      entrypoint: 'bash'
-      args: ['-c', |
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args: 
+        '-c' 
+        |
         if grep -q '"Critical": 0' report.json; then
           echo "No critical vulnerabilities found. Build passed.";
         else
@@ -98,8 +99,7 @@ steps:
           # Exiting with failure status to fail the build
           exit 1;
         fi
-    ]
- 
+        
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
 
