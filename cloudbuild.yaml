@@ -68,8 +68,8 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args: 
-        '-c' 
-        |
+      - '-c' 
+      - |
         if grep -q '"Critical": 0' report.json; then
           echo "No critical vulnerabilities found. Build passed.";
         else
