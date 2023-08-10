@@ -79,7 +79,7 @@ steps:
         ifconfig
         _HOST_IP=$(ifconfig eth0 | awk -F ' *|:' '/inet addr/{print $4}')
         echo $_HOST_IP
-        clair-scanner -c http://192.168.10.4:6060 --ip 192.168.10.2 --report="report.json" -t "High" mongo-express:latest
+        clair-scanner -c http://192.168.10.4:6060 --ip 192.168.10.2 --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
 
   # - name: 'gcr.io/cloud-builders/docker'
   #   entrypoint: 'bash'
@@ -121,7 +121,7 @@ steps:
         
         
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest-scanned']
+    args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
 
   # Step 7: Store the scan report in a GCS bucket
   - name: 'gcr.io/cloud-builders/gsutil'
