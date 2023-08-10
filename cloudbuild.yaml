@@ -3,8 +3,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest', '.']
 
-
-  - name: 'ubuntu'
+   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
       - '-c'
@@ -33,7 +32,11 @@ steps:
 
         echo "docker ps"
         docker ps
-        
+        sleep 20
+        echo "docker ps -a "
+        docker ps -a 
+        echo "docker logs clair"
+        docker logs clair
         curl -L https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64 -o /usr/bin/clair-scanner
         chmod 777 /usr/bin/clair-scanner
         clair-scanner -h
@@ -54,7 +57,46 @@ steps:
         ifconfig
         _HOST_IP=$(ifconfig eth0 | awk -F ' *|:' '/inet addr/{print $4}')
         echo $_HOST_IP
-        clair-scanner -c http://127.0.0.1:6060 --ip "127.0.0.1" --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
+        clair-scanner -c http://127.0.0.1:6060 --ip "127.0.0.1" --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-sca
+
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       git clone https://github.com/quay/clair.git
+  #       cd clair
+  #       docker-compose pull
+  #       docker-compose up -d
+        
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       apt-get install -y wget
+  #       apt-get install -y curl
+        
+  #       # Install Klar
+  #       wget https://github.com/optiopay/klar/releases/download/v2.4.0/klar-ubuntu
+  #       chmod +x klar-ubuntu
+  #       mv klar-ubuntu /usr/local/bin/klar
+
+  #       # Scan Docker image using Klar
+  #       IMAGE_NAME=gcr.io/$PROJECT_ID/my-app:$COMMIT_SHA
+  #       klar -c https://<CLAIR_HOST>:<CLAIR_PORT> -i $IMAGE_NAME
+
+  #       # Get Klar exit code
+  #       KLAR_EXIT_CODE=$?
+
+  #       # Fail if critical vulnerabilities found
+  #       if [[ $KLAR_EXIT_CODE -eq 0 ]]; then
+  #         echo "No vulnerabilities found."
+  #       else
+  #         echo "Critical vulnerabilities found. Exiting..."
+  #         exit 1
+        # fi
+        
         
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest-scanned']
