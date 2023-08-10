@@ -58,8 +58,9 @@ steps:
         echo "telnet _CLAIR_CONTAINER_IP 6060"
         telnet $_CLAIR_CONTAINER_IP 6060
 
-        
-        
+        echo "_CLAIR_CONTAINER_IP"
+        echo "${_CLAIR_CONTAINER_IP}"
+
         echo "lsof -i tcp:6060"
         lsof -i tcp:6060
         
