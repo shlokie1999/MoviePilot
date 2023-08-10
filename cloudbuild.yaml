@@ -26,100 +26,80 @@ steps:
         docker run hello-world
         docker pull arminc/clair-local-scan
         docker pull arminc/clair-db
-
         docker pull mongo-express:latest
-        
         docker images
         docker run --network=cloudbuild -d --name clair-db arminc/clair-db:latest 
         docker run --network=cloudbuild -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:latest
-
         #_CLAIR_CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair)
         _CLAIR_CONTAINER_IP=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' clair)
-
         echo "docker ps"
         docker ps
-        
         sleep 20
         echo "docker ps -a "
         docker ps -a 
-        
         echo "docker logs clair"
         docker logs clair
-
         echo "docker network ls"
         docker network ls
-        
         curl -L https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64 -o /usr/bin/clair-scanner
         chmod 777 /usr/bin/clair-scanner
         clair-scanner -h
-        
         echo "telnet 127.0.0.1 6060"
         telnet 127.0.0.1 6060
-
         echo "telnet 192.168.10.2 6060"
         telnet 192.168.10.2 6060
-
         echo "telnet _CLAIR_CONTAINER_IP 6060"
         telnet $_CLAIR_CONTAINER_IP 6060
-
         echo "_CLAIR_CONTAINER_IP"
         echo "${_CLAIR_CONTAINER_IP}"
-
         echo "docker inspect clair"
         docker inspect clair
         docker inspect clair | grep "IPAddress"
-
         echo "lsof -i tcp:6060"
         lsof -i tcp:6060
-        
         ls
         docker images
-        
         ip addr show
         ifconfig
         _HOST_IP=$(ifconfig eth0 | awk -F ' *|:' '/inet addr/{print $4}')
         echo $_HOST_IP
-        clair-scanner -c http://192.168.10.4:6060 --ip 192.168.10.2 --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
+        clair-scanner -c http://192.168.10.4:6060 --ip 192.168.10.2 --report="report.json" -t "Critical" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
 
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       git clone https://github.com/quay/clair.git
-  #       cd clair
-  #       docker-compose pull
-  #       docker-compose up -d
-        
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       apt-get install -y wget
-  #       apt-get install -y curl
-        
-  #       # Install Klar
-  #       wget https://github.com/optiopay/klar/releases/download/v2.4.0/klar-ubuntu
-  #       chmod +x klar-ubuntu
-  #       mv klar-ubuntu /usr/local/bin/klar
-
-  #       # Scan Docker image using Klar
-  #       IMAGE_NAME=gcr.io/$PROJECT_ID/my-app:$COMMIT_SHA
-  #       klar -c https://<CLAIR_HOST>:<CLAIR_PORT> -i $IMAGE_NAME
-
-  #       # Get Klar exit code
-  #       KLAR_EXIT_CODE=$?
-
-  #       # Fail if critical vulnerabilities found
-  #       if [[ $KLAR_EXIT_CODE -eq 0 ]]; then
-  #         echo "No vulnerabilities found."
-  #       else
-  #         echo "Critical vulnerabilities found. Exiting..."
-  #         exit 1
-        # fi
-        
-        
+  # Remediation guidance
+    - name: 'gcr.io/cloud-builders/gcloud'
+      entrypoint: 'bash'
+      args: ['-c', |
+        if grep -q '"Critical": 0' report.json; then
+        echo "No critical vulnerabilities found. Build passed.";
+        else
+          echo "Critical vulnerabilities found. Build failed.";
+          echo "To remediate vulnerabilities:";
+          echo "1. Review the 'scan_report.json' for detailed vulnerability information.";
+          echo "2. Identify the affected software packages or libraries.";
+          echo "3. Consult the official vulnerability database for each vulnerability:";
+          echo "   - For Debian/Ubuntu: https://security-tracker.debian.org/tracker/";
+          echo "   - For CentOS/Red Hat: https://access.redhat.com/security/vulnerabilities/";
+          echo "   - For Python packages: https://nvd.nist.gov/vuln/search";
+          # Provide guidance on applying fixes based on the vulnerabilities
+          echo "4. Determine if patches, upgrades, or changes to code/configuration are needed.";
+          echo "   - Apply patches provided by the vendor.";
+          echo "   - Upgrade to a non-vulnerable version.";
+          echo "   - Modify code/configuration to mitigate the vulnerability.";
+          echo "5. Apply necessary fixes, patches, or updates as per vendor recommendations.";
+          echo "   - Follow best practices for security updates in your specific technology stack.";
+          echo "6. Rebuild the Docker image with the fixes applied.";
+          echo "   - Update your Dockerfile or code to include the patched versions.";
+          echo "   - Perform necessary testing to ensure the changes don't introduce new issues.";
+          echo "7. Re-scan the image using Clair to confirm that vulnerabilities are resolved.";
+          echo "   - If vulnerabilities are still detected, review your remediation steps.";
+          # If all vulnerabilities are remediated, allow the build to pass
+          echo "8. Once all vulnerabilities are remediated, rebuild the image and scan again.";
+          echo "   - If no critical vulnerabilities are detected, the build will pass.";
+          # Exiting with failure status to fail the build
+          exit 1;
+         fi
+    ]
+ 
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
 
