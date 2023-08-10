@@ -76,7 +76,7 @@ steps:
         ifconfig
         _HOST_IP=$(ifconfig eth0 | awk -F ' *|:' '/inet addr/{print $4}')
         echo $_HOST_IP
-        clair-scanner -c http://192.168.10.4:6060 --ip "localhost" --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
+        clair-scanner -c http://192.168.10.4:6060 --ip "192.168.64.2" --report="report.json" -t "High" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
 
   # - name: 'gcr.io/cloud-builders/docker'
   #   entrypoint: 'bash'
