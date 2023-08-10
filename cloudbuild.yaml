@@ -3,7 +3,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest', '.']
 
-   - name: 'ubuntu'
+  - name: 'ubuntu'
     entrypoint: 'bash'
     args:
       - '-c'
