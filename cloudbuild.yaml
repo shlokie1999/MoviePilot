@@ -63,7 +63,7 @@ steps:
         ifconfig
         _HOST_IP=$(ifconfig eth0 | awk -F ' *|:' '/inet addr/{print $4}')
         echo $_HOST_IP
-        clair-scanner -c http://192.168.10.4:6060 --ip 192.168.10.2 --report="report.json" -t "Critical" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
+        clair-scanner -c http://192.168.10.4:6060 --ip ${_HOST_IP} --report="report.json" -t "Critical" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
 
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
