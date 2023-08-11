@@ -70,9 +70,7 @@ steps:
     args: 
       - '-c' 
       - |
-        if grep -q '"Critical": 0' report.json; then
-          echo "No critical vulnerabilities found. Build passed.";
-        else
+        if grep -q '"severity": "Critical"' scan_report.json; then
           echo "Critical vulnerabilities found. Build failed.";
           echo "To remediate vulnerabilities:";
           echo "1. Review the 'scan_report.json' for detailed vulnerability information.";
@@ -96,14 +94,14 @@ steps:
           # If all vulnerabilities are remediated, allow the build to pass
           echo "8. Once all vulnerabilities are remediated, rebuild the image and scan again.";
           echo "   - If no critical vulnerabilities are detected, the build will pass.";
-          # Exiting with failure status to fail the build
           exit 1;
+        else
+          echo "No critical vulnerabilities found. Build passed.";
         fi
-        
+           
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest']
 
   # Step 7: Store the scan report in a GCS bucket
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', 'report.json', 'gs://clair_scan_report_bucket/report.json']
-
