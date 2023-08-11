@@ -41,7 +41,6 @@ steps:
 
 
         echo "_CLAIR_CONTAINER_IP_1"
-        echo ${_CLAIR_CONTAINER_IP_12}
         echo $_CLAIR_CONTAINER_IP_1
 
         
@@ -50,6 +49,10 @@ steps:
 
         echo "_DOCKER_HOST_IP_1"
         echo $_DOCKER_HOST_IP_1
+
+        echo "_DOCKER_HOST_IP_12"
+        echo ${_DOCKER_HOST_IP_12}
+        echo $_DOCKER_HOST_IP_12
 
         echo "_DOCKER_HOST_IP_2"
         echo $_DOCKER_HOST_IP_2
