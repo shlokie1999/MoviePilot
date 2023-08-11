@@ -70,7 +70,7 @@ steps:
     args: 
       - '-c' 
       - |
-        if grep -q '"severity": "Critical"' scan_report.json; then
+        if grep -q '"severity": "Critical"' report.json; then
           echo "Critical vulnerabilities found. Build failed.";
           echo "To remediate vulnerabilities:";
           echo "1. Review the 'scan_report.json' for detailed vulnerability information.";
