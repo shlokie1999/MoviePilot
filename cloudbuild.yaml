@@ -17,6 +17,7 @@ steps:
         apt-get -y install lsof
         apt-get  -y install telnet
         apt-get install iproute2 -y
+        apt-get -y install jq
         apt-get install ca-certificates curl gnupg -y
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
         chmod a+r /etc/apt/keyrings/docker.gpg
@@ -30,8 +31,29 @@ steps:
         docker images
         docker run --network=cloudbuild -d --name clair-db arminc/clair-db:latest 
         docker run --network=cloudbuild -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:latest
-        #_CLAIR_CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair)
-        _CLAIR_CONTAINER_IP=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' clair)
+        
+        _CLAIR_CONTAINER_IP_1=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair)
+        _CLAIR_CONTAINER_IP_1=$(docker inspect clair | jq '.[].NetworkSettings.Networks.cloudbuild.IPAddress' | tr -d \")
+        
+        _DOCKER_HOST_IP_1=$(ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+        _DOCKER_HOST_IP_2=$(ifconfig eth0 |grep "inet\b"| awk '{print $2}')
+
+
+        echo "_CLAIR_CONTAINER_IP_1"
+        echo $_CLAIR_CONTAINER_IP_1
+        
+        echo "_CLAIR_CONTAINER_IP_2"
+        echo $_CLAIR_CONTAINER_IP_2
+
+        echo "_DOCKER_HOST_IP_1"
+        echo $_DOCKER_HOST_IP_1
+
+        echo "_DOCKER_HOST_IP_2"
+        echo $_DOCKER_HOST_IP_2
+
+        
+        
+        #_CLAIR_CONTAINER_IP=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' clair)
         echo "docker ps"
         docker ps
         sleep 20
