@@ -32,18 +32,14 @@ steps:
         docker run --network=cloudbuild -d --name clair-db arminc/clair-db:latest 
         docker run --network=cloudbuild -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:latest
         
-        _CLAIR_CONTAINER_IP_1=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair)
-        _CLAIR_CONTAINER_IP_2=$(docker inspect clair | jq '.[].NetworkSettings.Networks.cloudbuild.IPAddress' | tr -d \")
+        _CLAIR_CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair)
+        #_CLAIR_CONTAINER_IP_2=$(docker inspect clair | jq '.[].NetworkSettings.Networks.cloudbuild.IPAddress' | tr -d \")
         
         _DOCKER_HOST_IP=$(ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
 
 
-        echo "_CLAIR_CONTAINER_IP_1"
-        echo $$_CLAIR_CONTAINER_IP_1
-
-        
-        echo "_CLAIR_CONTAINER_IP_2"
-        echo $$_CLAIR_CONTAINER_IP_2
+        echo "_CLAIR_CONTAINER_IP"
+        echo $$_CLAIR_CONTAINER_IP
 
         echo "_DOCKER_HOST_IP"
         echo $$_DOCKER_HOST_IP
@@ -83,7 +79,7 @@ steps:
         ifconfig
         _HOST_IP=$(ifconfig eth0 | awk -F ' *|:' '/inet addr/{print $4}')
         echo $_HOST_IP
-        clair-scanner -c http://192.168.10.4:6060 --ip $$_DOCKER_HOST_IP --report="report.json" -t "Critical" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
+        clair-scanner -c http://$${_CLAIR_CONTAINER_IP}:6060 --ip $${_DOCKER_HOST_IP} --report="report.json" -t "Critical" us-central1-docker.pkg.dev/mcmp-integration-qa/clair-scan-repo/appimage:latest
 
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
