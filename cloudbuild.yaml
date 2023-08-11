@@ -30,10 +30,6 @@ steps:
         docker run --network=cloudbuild -p 6060:6060 --link clair-db:postgres -d --name clair arminc/clair-local-scan:latest
         _CLAIR_CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair)
         _DOCKER_HOST_IP=$(ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
-        echo "_CLAIR_CONTAINER_IP"
-        echo $$_CLAIR_CONTAINER_IP
-        echo "_DOCKER_HOST_IP"
-        echo $$_DOCKER_HOST_IP
         curl -L https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64 -o /usr/bin/clair-scanner
         chmod 777 /usr/bin/clair-scanner
         clair-scanner -h
