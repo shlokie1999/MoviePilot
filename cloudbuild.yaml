@@ -36,17 +36,23 @@ steps:
         _CLAIR_CONTAINER_IP_1=$(docker inspect clair | jq '.[].NetworkSettings.Networks.cloudbuild.IPAddress' | tr -d \")
         
         _DOCKER_HOST_IP_1=$(ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+        _DOCKER_HOST_IP_12=$$(ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
         _DOCKER_HOST_IP_2=$(ifconfig eth0 |grep "inet\b"| awk '{print $2}')
 
 
         echo "_CLAIR_CONTAINER_IP_1"
         echo $_CLAIR_CONTAINER_IP_1
+
         
         echo "_CLAIR_CONTAINER_IP_2"
         echo $_CLAIR_CONTAINER_IP_2
 
         echo "_DOCKER_HOST_IP_1"
         echo $_DOCKER_HOST_IP_1
+
+        echo "_DOCKER_HOST_IP_12"
+        echo ${_DOCKER_HOST_IP_12}
+        echo $_DOCKER_HOST_IP_12
 
         echo "_DOCKER_HOST_IP_2"
         echo $_DOCKER_HOST_IP_2
