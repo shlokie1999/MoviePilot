@@ -7,7 +7,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest']
 
-# Step 3: Run vulnerability scan using Artifact Analysis
+  # Step 3: Run vulnerability scan using Artifact Analysis
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['beta', 'container', 'images', 'vulnerability-scanning', 'scan', 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest']
 
