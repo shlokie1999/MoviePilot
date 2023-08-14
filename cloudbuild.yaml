@@ -13,7 +13,7 @@ steps:
       - 'beta'
       - 'container'
       - 'images'
-      - 'scan'
+      - 'analyze'
       - 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest'  # Replace with the actual image name and tag
 
   # # Step 3: Run vulnerability scan using Artifact Analysis
