@@ -13,7 +13,6 @@ steps:
       - 'beta'
       - 'container'
       - 'images'
-      - 'vulnerability-scanning'
       - 'scan'
       - 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest'  # Replace with the actual image name and tag
 
