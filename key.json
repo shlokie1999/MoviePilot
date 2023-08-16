@@ -1,13 +1,1 @@
-{
-  "type": "service_account",
-  "project_id": "mcmp-integration-qa",
-  "private_key_id": "aa0ffbad7d42b7f1b08d58afc9722257ada3a800",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCZRsZnlS/w1aOm\nexS3s5bHAep9eEjidtsrwX5X5TQrXde8Xv+Xf4tAZu2uLe/PmQs+lU8nLj66tOdN\nNaZoQ2mWqpc7DOI/ffYblWxZELKb1DypjS9lnPMPNSu0QohXpYXLypORo6ACnqlI\nBTx0R3V+1VMEhrwm6PmLHOlUD/g/QrXpK06woqqinbHUdq31UpDuWU5ooBjePn6A\n0bfAZ+9btnx8rfHHbkhiUJ/oLXq6Xds28gCxNcXR/GbHkWaNkSDglZdSLsoSihcb\nX8Nz0XzlL434cRnbDHX8faVil0uCb9vFidM1FJtSrDoVK3uHMsHS+i0S6L1NUnas\n2A4qyZwhAgMBAAECggEAHzvZotJ3FDXItRxYJq4BL9jvWnWILqPHOjWiBBG4DY1A\nMMnP/iR2sR84WFnSiCR48t4UpNiK3luOVcC0wgLYsaPeEOGpegQ2Qj0y+LxLFS+M\n1AUp7yQqMINmfkNfirK3XsWPSCqGaPpBZyRwAwbrxbZ9RgsZrLklXsh7sI5XiTZD\nWd+FooO+ltIKoZsD9y5dLC/ZYYad5Ze0Kq4Vx4x2z8eaUaXzDQoArci7kCsDIILr\nkCRsdtcP5/kdLhF02b02ge627D81gajehls6hRuXcmly1rVetTApPweDl4EnVxZN\nq2PZJEd63jTvjt3Fcq+CQBn9JR23NvlrIqS2JLEvZQKBgQDM5mcip4CxFvhl6Wlc\nNPFkqm+q2hjhWcnhqHbNNIQ+HEcZ1LSwItar3qwhNUln6XcCPyw118/q+F6ZBVwJ\nepQ98dCIFPp0/PntL9gDtYDmTz71bgcNjwGUENFWHp7lCRMIut8haZyufIkdh6F0\npV68r5ZH9oaqAfupY5VnN2RBZQKBgQC/gIdAio5SbBrkGExSh2NT1F3Z1jYkZZsE\nnDxVHrEwYMvDwzZ29SA3caFHBNjwq6BWQuvE8xpwQRO5mUUeD6zV/Z3p+suCoMR8\nw9mVsHaA/dRRBHECEHoJUvTjAJOFQBswWoosX+mYge46auJvHZRXV+FpBFj7mjBm\nKgqcOjmCDQKBgA385KmO+dAdG1QJvTGYQ6p1oC3vuacYtBl9oK6dmTGMSKZQyQ0F\nM9aD2whhVOONIpy6p0/9raoCzqJvpTrYbWpVKcFAfWCjLISusXZ/W49ddZTXsA+S\n5a6v/zp72KkWF4CPEVB8nz+iLNIhQjpuV6tV6VJ8V/EfNYj4zWhAdc2pAoGAHbqY\nRJ695XG+4vYasx0tgFARmcW1dgUIAbk3bIdtPnNobqWZiPIY5EKRpPLNst8R7xJI\ng7SxwAd6Rm/S2Q3Z6QaMQ0yZ11eZ6TyGRMS2QOQm18T2vjlMmLH2Ll9ih2ciUWlc\n1fK10uUo1IzPRiyzYLPV3HW+UqDnLpUMPKCVWOkCgYASy481Ad2eEhLuXuK1WCvx\nKHNlUwky37hnX1jeoyD7D3Gk6mXPJ0TBijzVnZmybJa6WijcEzJQ8ic7yvyue+HV\nS5sA/hY/mBxbW62R4jowuSyyvhqv/5Bflr10hLTFNdYBvJxt7LCU5+S3L747Q99O\ngLE7YgSMlPRIB3CBOMNX4A==\n-----END PRIVATE KEY-----\n",
-  "client_email": "shlok-generic@mcmp-integration-qa.iam.gserviceaccount.com",
-  "client_id": "100820073822619551580",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/shlok-generic%40mcmp-integration-qa.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
-}
+
