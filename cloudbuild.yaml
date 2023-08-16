@@ -7,44 +7,31 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest']
 
-# Step 3: Run vulnerability scan using Artifact Analysis
+
   - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
     args:
-      - 'beta'
-      - 'container'
-      - 'images'
-      - 'analyze'
-      - 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest'  # Replace with the actual image name and tag
-
-  # # Step 3: Run vulnerability scan using Artifact Analysis
-  # - name: 'gcr.io/cloud-builders/gcloud'
-  #   args: ['beta', 'container', 'images', 'vulnerability-scanning', 'scan', 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest']
-
-
-  # - name: 'gcr.io/cloud-builders/gcloud'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #     # Authenticate with Google Cloud using service account key
-  #       gcloud auth activate-service-account --key-file=$SA_KEY_FILE
-  #     # Set project ID
-  #       gcloud config set project $PROJECT_ID
-  #     # Enable Artifact Analysis API
-  #       gcloud services enable artifactregistry.googleapis.com
+      - '-c'
+      - |
+      # Authenticate with Google Cloud using service account key
+        gcloud auth activate-service-account --key-file=key.json
+      # Set project ID
+        gcloud config set project mcmp-integration-qa
+      # Enable Artifact Analysis API
+        gcloud services enable artifactregistry.googleapis.com
       
-  #     # Define image name (replace with your actual image name)
-  #       IMAGE_NAME="gcr.io/$PROJECT_ID/your-image-name"
+      # Define image name (replace with your actual image name)
+        IMAGE_NAME="us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest"
        
-  #     # Set custom security policies
-  #       gcloud beta container images vulnerability-scanning update-policy $IMAGE_NAME \
-  #         --update-field=severity=CUSTOM_HIGH=CRITICAL,CUSTOM_MEDIUM=HIGH \
-  #         --update-field=compliance=PCI_DSS=HIGH,ISO_27001=MEDIUM \
-  #         --update-field=frequency=BEFORE_DEPLOYMENTS \
-  #         --update-field=action=STOP
+      # # Set custom security policies
+      #   gcloud beta container images vulnerability-scanning update-policy $IMAGE_NAME \
+      #     --update-field=severity=CUSTOM_HIGH=CRITICAL,CUSTOM_MEDIUM=HIGH \
+      #     --update-field=compliance=PCI_DSS=HIGH,ISO_27001=MEDIUM \
+      #     --update-field=frequency=BEFORE_DEPLOYMENTS \
+      #     --update-field=action=STOP
       
-  #     # Run vulnerability scan
-  #       gcloud beta container images vulnerability-scanning scan $IMAGE_NAME
+      # # Run vulnerability scan
+      #   gcloud beta container images vulnerability-scanning scan $IMAGE_NAME
 
  
   
