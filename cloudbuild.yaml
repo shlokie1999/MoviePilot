@@ -16,7 +16,7 @@ steps:
         gcloud services enable artifactregistry.googleapis.com
         IMAGE_NAME="us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest"
        
-      # # Set custom security policies
+        # Set custom security policies
       #   gcloud beta container images vulnerability-scanning update-policy $IMAGE_NAME \
       #     --update-field=severity=CUSTOM_HIGH=CRITICAL,CUSTOM_MEDIUM=HIGH \
       #     --update-field=compliance=PCI_DSS=HIGH,ISO_27001=MEDIUM \
