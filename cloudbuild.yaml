@@ -2,25 +2,18 @@ steps:
   # Step 0: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest', '.']
-
   # Step 1: Push the image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest']
-
 
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-      # Authenticate with Google Cloud using service account key
         gcloud auth activate-service-account --key-file=key.json
-      # Set project ID
         gcloud config set project mcmp-integration-qa
-      # Enable Artifact Analysis API
         gcloud services enable artifactregistry.googleapis.com
-      
-      # Define image name (replace with your actual image name)
         IMAGE_NAME="us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest"
        
       # # Set custom security policies
