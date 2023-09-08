@@ -1,30 +1,32 @@
 steps:
   # Step 0: Build the Docker image
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args: ['build', '-t', 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest', '.']
+  # # Step 1: Push the image to Container Registry
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest']
+
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest', '.']
-  # Step 1: Push the image to Container Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest']
+    args: ['pull', 'sonarsource/sonar-scanner-cli']
+
 
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        gcloud auth activate-service-account --key-file=key.json
-        gcloud config set project mcmp-integration-qa
-        gcloud services enable artifactregistry.googleapis.com
-        IMAGE_NAME="us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest"
-       
-        # Set custom security policies
-      #   gcloud beta container images vulnerability-scanning update-policy $IMAGE_NAME \
-      #     --update-field=severity=CUSTOM_HIGH=CRITICAL,CUSTOM_MEDIUM=HIGH \
-      #     --update-field=compliance=PCI_DSS=HIGH,ISO_27001=MEDIUM \
-      #     --update-field=frequency=BEFORE_DEPLOYMENTS \
-      #     --update-field=action=STOP
-      
-      # # Run vulnerability scan
-      #   gcloud beta container images vulnerability-scanning scan $IMAGE_NAME
+        sonar-scanner \
+          -Dsonar.organization=Workspace \
+          -Dsonar.projectKey=Workspace:TestingGCP \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=$$_SONAR_TOKEN
+    secretEnv: ['_SONAR_TOKEN']
+availableSecrets:
+  secretManager:
+  - versionName: projects/364895990307/secrets/sonarcloud-token/versions/1
+    env: '_SONAR_TOKEN'  
+        
 
  
   
