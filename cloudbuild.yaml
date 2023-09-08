@@ -16,8 +16,8 @@ steps:
       - '-c'
       - |
         sonar-scanner \
-          -Dsonar.organization=Workspace \
-          -Dsonar.projectKey=Workspace:TestingGCP \
+          -Dsonar.organization=workspace1101 \
+          -Dsonar.projectKey=workspace1101_testinggcp \
           -Dsonar.sources=. \
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.login=$$_SONAR_TOKEN
