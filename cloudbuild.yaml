@@ -7,7 +7,7 @@ steps:
   #   args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest']
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['pull', 'sonarsource/sonar-scanner-cli']
+    args: ['pull', 'sonarsource/sonar-scanner-cli:latest']
 
 
   - name: 'sonarsource/sonar-scanner-cli:latest'
