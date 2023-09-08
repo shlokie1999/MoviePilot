@@ -22,11 +22,12 @@ steps:
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.login=$$_SONAR_TOKEN
     secretEnv: ['_SONAR_TOKEN']
+    
 availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/1
     env: '_SONAR_TOKEN'  
-        
+#
 
  
   
