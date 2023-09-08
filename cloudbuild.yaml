@@ -20,7 +20,6 @@ availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/2
     env: '_SONAR_TOKEN'  
-#
-#
+
  
   
