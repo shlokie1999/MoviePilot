@@ -23,7 +23,7 @@ steps:
       - |
         apt-get update && apt-get install -y curl
         apt-get install -y jq
-        _QUALITY_GATE_STATUS=$(curl -s -G -u $$_SONAR_TOKEN:https://sonarcloud.io/api/qualitygates/project_status?projectKey=workspace1101_testinggcp | jq -r '.projectStatus.status')
+        _QUALITY_GATE_STATUS=$(curl -s -G -u $$_SONAR_TOKEN: https://sonarcloud.io/api/qualitygates/project_status?projectKey=workspace1101_testinggcp | jq -r '.projectStatus.status')
         if [ "$_QUALITY_GATE_STATUS" != "OK" ]; then
           echo "Quality gate is not OK: $_QUALITY_GATE_STATUS"
           exit 1
