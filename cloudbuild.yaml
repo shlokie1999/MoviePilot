@@ -10,7 +10,7 @@ steps:
     args: ['pull', 'sonarsource/sonar-scanner-cli']
 
 
-  - name: 'gcr.io/cloud-builders/gcloud'
+  - name: 'sonarsource/sonar-scanner-cli:latest'
     entrypoint: 'bash'
     args:
       - '-c'
