@@ -1,14 +1,7 @@
 steps:
-  # Step 0: Build the Docker image
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args: ['build', '-t', 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest', '.']
-  # # Step 1: Push the image to Container Registry
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/artifact-analysis/appimage:latest']
 
   - name: 'gcr.io/cloud-builders/docker'
     args: ['pull', 'sonarsource/sonar-scanner-cli:latest']
-
 
   - name: 'sonarsource/sonar-scanner-cli:latest'
     entrypoint: 'bash'
@@ -28,6 +21,6 @@ availableSecrets:
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/2
     env: '_SONAR_TOKEN'  
 #
-
+#
  
   
