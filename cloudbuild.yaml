@@ -39,8 +39,8 @@ steps:
                -d "$issue_data" \
                https://api.github.com/repos/shlokie1999/MoviePilot/issues
           exit 1
-        fi
-     secretEnv: ['_SONAR_TOKEN','_GITHUB_TOKEN']
+         fi
+      secretEnv: ['_SONAR_TOKEN','_GITHUB_TOKEN']
 availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/2
