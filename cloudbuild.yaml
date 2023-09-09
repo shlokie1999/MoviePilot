@@ -16,12 +16,14 @@ steps:
     secretEnv: ['_SONAR_TOKEN']
   - name: 'gcr.io/cloud-builders/curl'
     args: ['-sSfL', '-u', '$$_SONARTOKEN:','https://sonarcloud.io/api/qualitygates/projectstatus?projectKey=workspace1101_testinggcp']
+  - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
         set -e
         apt-get update && apt-get install -y jq
+        apt-get install -y curl
         response=(curl−sSfL−u $$_SONAR_TOKEN: https://sonarcloud.io/api/qualitygates/project_status?projectKey=workspace1101_testinggcp)
         status=(echo $response | jq -r ".projectStatus.status")
         echo $response
