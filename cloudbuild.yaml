@@ -26,13 +26,27 @@ steps:
         echo "Quality gate status: $status"
         if [ "$status" != "OK" ]; then
           echo "Quality gate failed"
+          issue_data=$(cat <<EOF
+          {
+            "title": "Quality gate failed in Cloud Build",
+            "body": "The quality gate check failed in Cloud Build for project: workspace1101_testinggcp. Please review the build logs and address the issues."
+          }
+          EOF
+          )
+          curl -X POST \
+               -H "Authorization: token $$_GITHUB_TOKEN " \
+               -H "Accept: application/vnd.github.v3+json" \
+               -d "$issue_data" \
+               https://api.github.com/repos/shlokie1999/MoviePilot/issues
           exit 1
         fi
-    secretEnv: ['_SONAR_TOKEN']
+     secretEnv: ['_SONAR_TOKEN','_GITHUB_TOKEN']
 availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/2
     env: '_SONAR_TOKEN'  
+  - versionName: projects/364895990307/secrets/mailgun-domain/versions/2
+    env: '_GITHUB_TOKEN'
 
  
   
