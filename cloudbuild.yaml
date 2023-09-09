@@ -19,20 +19,15 @@ steps:
     args:
       - '-c'
       - |
-      
-        set -e
-        apt-get update && apt-get install -y jq
-        apt-get install -y curl
-        response=(curl −sSfL −u $$_SONAR_TOKEN: https://sonarcloud.io/api/qualitygates/project_status?projectKey=workspace1101_testinggcp)
-        status=(echo $response | jq -r ".projectStatus.status")
-        echo $response
-        echo $status
+        apt-get update && apt-get install -y jq curl
+        response=$(curl -sSfL -u "$$_SONAR_TOKEN:" "https://sonarcloud.io/api/qualitygates/project_status?projectKey=workspace1101_testinggcp")
+        status=$(echo "$response" | jq -r ".projectStatus.status")
+        echo "Response: $response"
         echo "Quality gate status: $status"
         if [ "$status" != "OK" ]; then
           echo "Quality gate failed"
           exit 1
         fi
-        #
 availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/2
