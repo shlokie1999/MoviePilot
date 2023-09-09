@@ -14,21 +14,21 @@ steps:
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.login=$$_SONAR_TOKEN
     secretEnv: ['_SONAR_TOKEN']
-  - name: ‘gcr.io/cloud-builders/curl’
-    args: [‘-sSfL’, ‘-u’, ’$$_SONARTOKEN′,′https://sonarcloud.io/api/qualitygates/projectstatus?projectKey=workspace1101_testinggcp’]
-    entrypoint: ‘bash’
+  - name: 'gcr.io/cloud-builders/curl'
+    args: ['-sSfL', '-u', '$$_SONARTOKEN:','https://sonarcloud.io/api/qualitygates/projectstatus?projectKey=workspace1101_testinggcp']
+    entrypoint: 'bash'
     args:
-      - ‘-c’
+      - '-c'
       - |
         set -e
         apt-get update && apt-get install -y jq
         response=(curl−sSfL−u $$_SONAR_TOKEN: https://sonarcloud.io/api/qualitygates/project_status?projectKey=workspace1101_testinggcp)
-        status=(echo $response | jq -r “.projectStatus.status”)
+        status=(echo $response | jq -r ".projectStatus.status")
         echo $response
         echo $status
-        echo “Quality gate status: $status”
-        if [ “$status” != “OK” ]; then
-        echo “Quality gate failed”
+        echo "Quality gate status: $status"
+        if [ "$status" != "OK" ]; then
+        echo "Quality gate failed"
         exit 1
       fi
   # - name: 'gcr.io/cloud-builders/gcloud'
