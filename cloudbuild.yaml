@@ -28,6 +28,7 @@ steps:
           echo "Quality gate failed"
           exit 1
         fi
+    secretEnv: ['_SONAR_TOKEN']
 availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/2
