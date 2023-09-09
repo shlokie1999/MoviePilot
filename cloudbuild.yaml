@@ -1,5 +1,5 @@
 steps:
-
+#
   - name: 'gcr.io/cloud-builders/docker'
     args: ['pull', 'sonarsource/sonar-scanner-cli:latest']
   - name: 'sonarsource/sonar-scanner-cli:latest'
