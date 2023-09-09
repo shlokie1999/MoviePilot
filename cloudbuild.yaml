@@ -17,7 +17,7 @@ steps:
     secretEnv: ['_SONAR_TOKEN']
     
   - name: ‘gcr.io/cloud-builders/curl’
-    args: [‘-sSfL’, ‘-u’, ’$$_SONARTOKEN:′,′https://sonarcloud.io/api/qualitygates/projectstatus?projectKey=workspace1101_testinggcp']
+    args: [‘-sSfL’, ‘-u’, ’$$_SONARTOKEN:′,′https://sonarcloud.io/api/qualitygates/projectstatus?projectKey=workspace1101_testinggcp’]
     entrypoint: ‘bash’
     args:
       - ‘-c’
