@@ -26,7 +26,7 @@ steps:
         echo "Quality gate status: $status"
         if [ "$status" != "OK" ]; then
           echo "Quality gate failed"
-          issue_data=$(cat <<EOF
+          issue_data=$(cat <<-EOF
           {
             "title": "Quality gate failed in Cloud Build",
             "body": "The quality gate check failed in Cloud Build for project: workspace1101_testinggcp. Please review the build logs and address the issues."
