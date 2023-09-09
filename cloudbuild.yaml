@@ -38,7 +38,7 @@ availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/2
     env: '_SONAR_TOKEN'  
-  - versionName: projects/364895990307/secrets/mailgun-domain/versions/2
+  - versionName: projects/364895990307/secrets/mailgun-domain/versions/3
     env: '_GITHUB_TOKEN'
 
  
