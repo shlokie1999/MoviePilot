@@ -7,6 +7,7 @@ steps:
       - '-c'
       - |
         sonar-scanner \
+          -X \
           -Dsonar.projectKey=testingongcp \
           -Dsonar.sources=. \
           -Dsonar.host.url=http://$$_IP_TOKEN:9000 \
