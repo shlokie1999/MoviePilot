@@ -9,12 +9,14 @@ steps:
         sonar-scanner \
           -Dsonar.projectKey=testingongcp \
           -Dsonar.sources=. \
-          -Dsonar.host.url=http://35.238.39.251:9000 \
+          -Dsonar.host.url=http://$$_IP_TOKEN:9000 \
           -Dsonar.login=$$_SONAR_TOKEN
-    secretEnv: ['_SONAR_TOKEN']
+    secretEnv: ['_SONAR_TOKEN','_IP_TOKEN']
 availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/3
-    env: '_SONAR_TOKEN'  
+    env: '_SONAR_TOKEN'
+  - versionName: projects/364895990307/secrets/mailgun-domain/versions/4
+    env: '_IP_TOKEN'
   
       
