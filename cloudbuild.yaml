@@ -19,7 +19,7 @@ steps:
       - '-c'
       - |
         apt-get update && apt-get install -y jq curl
-        response=$(curl --tlsv1.0 -X GET "https://$$_IP_TOKEN:9000/api/qualitygates/project_status?projectKey=testingongcp" -H "Authorization:$$_SONAR_TOKEN")
+        response=$(curl --tlsv1.3 -X GET "https://$$_IP_TOKEN:9000/api/qualitygates/project_status?projectKey=testingongcp" -H "Authorization:$$_SONAR_TOKEN")
         status=$(echo "$response" | jq -r ".projectStatus.status")
         echo "Response: $response"
         echo "Quality gate status: $status"
