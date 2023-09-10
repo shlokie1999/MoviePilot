@@ -26,14 +26,12 @@ steps:
         if [ "$status" != "OK" ]; then
           echo "Quality gate failed"
           curl -X POST \
-               -H "Authorization: token $$_GITHUB_TOKEN " \
-               -H "Accept: application/vnd.github.v3+json" \
-               -d '{"title": "Quality gate failed in SonarQube", "body": "The quality gate check failed in Cloud Build for project: testingongcp. Please review the build logs and address the issues."}' \
-               https://api.github.com/repos/shlokie1999/MoviePilot/issues
-          exit 1
-         fi
+             -H "Authorization: token $$_GITHUB_TOKEN " \
+             -H "Accept: application/vnd.github.v3+json" \
+             -d '{"title": "Quality gate failed in SonarQube", "body": "The quality gate check failed in Cloud Build for project: testingongcp. Please review the build logs and address the issues."}' \
+             https://api.github.com/repos/shlokie1999/MoviePilot/issues
+          exit 1; fi
      secretEnv: ['_SONAR_TOKEN','_GITHUB_TOKEN','_IP_TOKEN_']
-     
 availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/4
