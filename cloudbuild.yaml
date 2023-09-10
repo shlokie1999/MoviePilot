@@ -1,4 +1,23 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['run', '-d', '--name', 'sonarqube', '-p', '9000:9000', 'sonarqube:community']
-    
+    args: ['volume', 'create', 'sonarqube_data']
+  
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['volume', 'create', 'sonarqube_extensions']
+  
+  # Step 2: Run SonarQube with Volumes Attached
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+    - 'run'
+    - '-d'
+    - '-p'
+    - '9000:9000'
+    - '--name'
+    - 'sonarqube'
+    - '-v'
+    - 'sonarqube_data:/opt/sonarqube/data'
+    - '-v'
+    - 'sonarqube_extensions:/opt/sonarqube/extensions'
+    - 'sonarqube:community'
+  
+      
