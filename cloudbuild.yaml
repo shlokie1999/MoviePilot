@@ -23,7 +23,7 @@ steps:
         status=$(echo "$response" | jq -r ".projectStatus.status")
         echo "Response: $response"
         echo "Quality gate status: $status"
-    secretEnv: ['_SONAR_TOKEN','_IP_TOKEN_']
+    secretEnv: ['_SONAR_TOKEN','_IP_TOKEN']
 availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/4
