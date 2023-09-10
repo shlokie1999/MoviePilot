@@ -1,22 +1,20 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['volume', 'create','--name', 'sonarqube_data']
-
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['volume', 'create','--name', 'sonarqube_logs']
-
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['volume', 'create', '--name','sonarqube_extensions']
-
-  - name: 'gcr.io/cloud-builders/docker'
-    args: 
-    - 'run'
-    - '--rm'
-    - '-p'
-    - '9000:9000'
-    - '-v'
-    - 'sonarqube_extensions:/opt/sonarqube/extensions'
-    - 'sonarqube:community'
-
+    args: ['pull', 'sonarsource/sonar-scanner-cli:latest']
+  - name: 'sonarsource/sonar-scanner-cli:latest'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        sonar-scanner \
+          -Dsonar.projectKey=testingongcp \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=http://35.238.39.251:9000 \
+          -Dsonar.login=$$_SONAR_TOKEN
+    secretEnv: ['_SONAR_TOKEN']
+availableSecrets:
+  secretManager:
+  - versionName: projects/364895990307/secrets/sonarcloud-token/versions/3
+    env: '_SONAR_TOKEN'  
   
       
