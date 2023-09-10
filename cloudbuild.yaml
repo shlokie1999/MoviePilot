@@ -18,7 +18,7 @@ steps:
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y jq curl
+        apt-get update && apt-get install -y jq curl openssl
         response=$(curl --tlsv1.1 -X GET "https://$$_IP_TOKEN:9000/api/qualitygates/project_status?projectKey=testingongcp" -H "Authorization:$$_SONAR_TOKEN")
         status=$(echo "$response" | jq -r ".projectStatus.status")
         echo "Response: $response"
