@@ -1,7 +1,6 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['pull', 'sonarsource/sonar-scanner-cli:latest']
-
   - name: 'sonarsource/sonar-scanner-cli:latest'
     entrypoint: 'bash'
     args:
@@ -14,7 +13,6 @@ steps:
           -Dsonar.host.url=http://$$_IP_TOKEN:9000 \
           -Dsonar.login=$$_SONAR_TOKEN
     secretEnv: ['_SONAR_TOKEN','_IP_TOKEN']
-    
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
@@ -32,8 +30,10 @@ steps:
                -H "Accept: application/vnd.github.v3+json" \
                -d '{"title": "Quality gate failed in SonarQube", "body": "The quality gate check failed in Cloud Build for project: testingongcp. Please review the build logs and address the issues."}' \
                https://api.github.com/repos/shlokie1999/MoviePilot/issues
-          exit 1; fi
+          exit 1
+         fi
      secretEnv: ['_SONAR_TOKEN','_GITHUB_TOKEN','_IP_TOKEN_']
+     
 availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/4
