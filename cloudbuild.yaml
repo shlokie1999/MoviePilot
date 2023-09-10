@@ -16,8 +16,8 @@ steps:
     secretEnv: ['_IP_TOKEN']
 availableSecrets:
   secretManager:
-  - versionName: projects/364895990307/secrets/sonarcloud-token/versions/3
-    env: '_SONAR_TOKEN'
+  # - versionName: projects/364895990307/secrets/sonarcloud-token/versions/3
+  #   env: '_SONAR_TOKEN'
   - versionName: projects/364895990307/secrets/mailgun-domain/versions/4
     env: '_IP_TOKEN'
   
