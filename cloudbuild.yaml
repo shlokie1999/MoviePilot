@@ -5,12 +5,12 @@ steps:
     args:
       - '-c'
       - |
-        docker run -d -p 9000:9000 sonarqube:latest
+        docker run -d -p 9001:9000 sonarqube:latest
         sleep 120
         docker volume create sonarqube_data
         docker volume create sonarqube_extensions
         docker run -d \
-            -p 9000:9000 \
+            -p 9001:9000 \
             --name sonarqube \
             -v sonarqube_data:/opt/sonarqube/data \
             -v sonarqube_extensions:/opt/sonarqube/extensions \
