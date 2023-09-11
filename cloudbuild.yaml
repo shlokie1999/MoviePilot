@@ -1,6 +1,19 @@
+options:
+  network: 'host'
 steps:
   - name: 'gcr.io/cloud-builders/docker'
+    args: ['pull', 'sonarqube:latest']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['run', '--name', 'sonarqube_instance', '-d', '-p', '9000:9000', 'sonarqube:latest']
+    id: start_sonar
+    
+  - name: 'ubuntu'
+    args: ['sleep', '120'] # waits for 2 minutes
+    
+  - name: 'gcr.io/cloud-builders/docker'
     args: ['pull', 'sonarsource/sonar-scanner-cli:latest']
+    
   - name: 'sonarsource/sonar-scanner-cli:latest'
     entrypoint: 'bash'
     args:
@@ -10,24 +23,24 @@ steps:
           -X \
           -Dsonar.projectKey=testingongcp \
           -Dsonar.sources=. \
-          -Dsonar.host.url=http://$$_IP_TOKEN:9000 \
+          -Dsonar.host.url=http://localhost:9000 \
           -Dsonar.login=$$_SONAR_TOKEN
     secretEnv: ['_SONAR_TOKEN','_IP_TOKEN']
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        apt-get update && apt-get install -y jq curl openssl
-        apt-get install --only-upgrade curl openssl
-        openssl s_client -connect $$_IP_TOKEN:9000
-        # _TOKEN_BASE64=$(echo -n "$$_SONAR_TOKEN:" | base64)#
-        # response=$(curl -X GET "http://$$_IP_TOKEN:9000/api/qualitygates/project_status?projectKey=testingongcp" -H "Authorization:Basic $_TOKEN_BASE64")
-        response=$(curl "http://$$_IP_TOKEN:9000/api/qualitygates/project_status?projectKey=testingongcp" -H "Authorization: $$_SONAR_TOKEN")
-        status=$(echo "$response" | jq -r ".projectStatus.status")
-        echo "Response: $response"
-        echo "Quality gate status: $status"
-    secretEnv: ['_SONAR_TOKEN','_IP_TOKEN']
+  # - name: 'gcr.io/cloud-builders/gcloud'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       apt-get update && apt-get install -y jq curl openssl
+  #       apt-get install --only-upgrade curl openssl
+  #       openssl s_client -connect $$_IP_TOKEN:9000
+  #       # _TOKEN_BASE64=$(echo -n "$$_SONAR_TOKEN:" | base64)#
+  #       # response=$(curl -X GET "http://$$_IP_TOKEN:9000/api/qualitygates/project_status?projectKey=testingongcp" -H "Authorization:Basic $_TOKEN_BASE64")
+  #       response=$(curl "http://$$_IP_TOKEN:9000/api/qualitygates/project_status?projectKey=testingongcp" -H "Authorization: $$_SONAR_TOKEN")
+  #       status=$(echo "$response" | jq -r ".projectStatus.status")
+  #       echo "Response: $response"
+  #       echo "Quality gate status: $status"
+    # secretEnv: ['_SONAR_TOKEN','_IP_TOKEN']
 availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/4
