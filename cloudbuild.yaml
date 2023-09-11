@@ -7,9 +7,14 @@ steps:
       - |
         docker run -d -p 9000:9000 sonarqube:latest
         sleep 120
-        curl http://localhost:9000
-        docker pull sonarqube:latest
-        docker run 
+        docker volume create sonarqube_data
+        docker volume create sonarqube_extensions
+        docker run -d \
+            -p 9000:9000 \
+            --name sonarqube \
+            -v sonarqube_data:/opt/sonarqube/data \
+            -v sonarqube_extensions:/opt/sonarqube/extensions \
+              sonarqube:community 
         docker pull sonarsource/sonar-scanner-cli:latest
         sonar-scanner \
           -X \
