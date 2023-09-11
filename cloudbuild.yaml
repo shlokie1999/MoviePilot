@@ -12,7 +12,7 @@ steps:
     id: start_sonar
     
   - name: 'gcr.io/cloud-builders/curl'
-    args: ['http://sonarqube_instance:9000']
+    args: ['http://localhost:9000']
     id: access_sonar
     
   - name: 'ubuntu'
@@ -32,13 +32,11 @@ steps:
           -Dsonar.sources=. \
           -Dsonar.host.url=http://localhost:9000 \
           -Dsonar.login=$$_SONAR_TOKEN
-    secretEnv: ['_SONAR_TOKEN','_IP_TOKEN']
+    secretEnv: ['_SONAR_TOKEN']
 availableSecrets:
   secretManager:
-  - versionName: projects/364895990307/secrets/sonarcloud-token/versions/4
+  - versionName: projects/364895990307/secrets/sonarcloud-token/versions/5
     env: '_SONAR_TOKEN'
-  - versionName: projects/364895990307/secrets/mailgun-domain/versions/4
-    env: '_IP_TOKEN'
   # - versionName: projects/364895990307/secrets/mailgun-domain/versions/3
   #   env: '_GITHUB_TOKEN'
   
