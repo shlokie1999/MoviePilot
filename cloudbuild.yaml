@@ -21,7 +21,7 @@ steps:
         apt-get update && apt-get install -y jq curl openssl
         apt-get install --only-upgrade curl openssl
         openssl s_client -connect $$_IP_TOKEN:9000
-        # _TOKEN_BASE64=$(echo -n "$$_SONAR_TOKEN:" | base64)
+        # _TOKEN_BASE64=$(echo -n "$$_SONAR_TOKEN:" | base64)#
         # response=$(curl -X GET "http://$$_IP_TOKEN:9000/api/qualitygates/project_status?projectKey=testingongcp" -H "Authorization:Basic $_TOKEN_BASE64")
         response=$(curl "http://$$_IP_TOKEN:9000/api/qualitygates/project_status?projectKey=testingongcp" -H "Authorization: Bearer $$_SONAR_TOKEN")
         status=$(echo "$response" | jq -r ".projectStatus.status")
