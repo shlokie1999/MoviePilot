@@ -1,31 +1,16 @@
-# options:
-#   volumes:
-#     - name: 'docker-socket'
-#       path: '/var/run/docker.sock'
-
 steps:
+  
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['pull', 'sonarqube:latest']
-
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['run', '--name', 'sonarqube_instance', '-d', '-p', '9000:9000', 'sonarqube:latest']
-    id: start_sonar
-    
-  - name: 'gcr.io/cloud-builders/curl'
-    args: ['http://localhost:9000']
-    id: access_sonar
-    
-  - name: 'ubuntu'
-    args: ['sleep', '120'] # waits for 2 minutes
-    
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['pull', 'sonarsource/sonar-scanner-cli:latest']
-    
-  - name: 'sonarsource/sonar-scanner-cli:latest'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
+        docker run -d -p 9000:9000 sonarqube:latest
+        sleep 120
+        curl http://localhost:9000
+        docker pull sonarqube:latest
+        docker run 
+        docker pull sonarsource/sonar-scanner-cli:latest
         sonar-scanner \
           -X \
           -Dsonar.projectKey=testingongcp \
