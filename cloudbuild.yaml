@@ -1,7 +1,7 @@
-options:
-  volumes:
-    - name: 'docker-socket'
-      path: '/var/run/docker.sock'
+# options:
+#   volumes:
+#     - name: 'docker-socket'
+#       path: '/var/run/docker.sock'
 
 steps:
   - name: 'gcr.io/cloud-builders/docker'
