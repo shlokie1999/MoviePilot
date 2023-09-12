@@ -22,6 +22,8 @@ steps:
         apt-get install --only-upgrade curl openssl
         response=$(curl "http://34.135.193.41:9000/api/qualitygates/project_status?projectKey=testingongcpci" -H "Authorization: $$_SONAR_TOKEN")
         status=$(echo "$response" | jq -r ".projectStatus.status")
+        echo $response
+        echo $status
         if [ "$status" != "OK" ]; then
           echo "Quality gate failed"
           curl -X POST \
