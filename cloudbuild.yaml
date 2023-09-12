@@ -26,11 +26,12 @@ steps:
         echo $status
         if [ "$status" != "OK" ]; then
           echo "Quality gate failed"
+          echo $status
           curl -X POST \
                -H "Authorization: token $$_GITHUB_TOKEN " \
                -H "Accept: application/vnd.github.v3+json" \
                -d '{"title": "Quality gate failed in Cloud Build", "body": "The quality gate check failed in Cloud Build for project: workspace1101_testinggcp. Please review the build logs and address the issues."}' \
-               https://api.github.com/repos/your-username/your-repo/issues
+               https://api.github.com/repos/shlokie1999/MoviePilot/issues
           exit 1
         fi
     secretEnv: ['_SONAR_TOKEN','_GITHUB_TOKEN']
