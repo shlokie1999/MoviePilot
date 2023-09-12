@@ -12,7 +12,7 @@ steps:
           -Dsonar.sources=. \
           -Dsonar.host.url=http://34.135.193.41:9000 \
           -Dsonar.login=$$_SONAR_TOKEN
-     secretEnv: ['_SONAR_TOKEN']       
+    secretEnv: ['_SONAR_TOKEN']       
 availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/6
