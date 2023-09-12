@@ -1,7 +1,7 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['pull', 'sonarsource/sonar-scanner-cli:latest']
-  - name: 'gcr.io/cloud-builders/gcloud'
+  - name: 'sonarsource/sonar-scanner-cli:latest'
     entrypoint: 'bash'
     args:
       - '-c'
@@ -13,31 +13,30 @@ steps:
           -Dsonar.host.url=http://34.135.193.41:9000 \
           -Dsonar.login=$$_SONAR_TOKEN
     secretEnv: ['_SONAR_TOKEN']       
-  # - name: 'gcr.io/cloud-builders/gcloud'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       apt-get update && apt-get install -y jq curl openssl
-  #       apt-get install --only-upgrade curl openssl
-  #       openssl s_client -connect $$_IP_TOKEN:9000
-  #       response=$(curl "http://$$_IP_TOKEN:9000/api/qualitygates/project_status?projectKey=YOUR_PROJECT_KEY" -H "Authorization: $$_SONAR_TOKEN")
-  #       status=$(echo "$response" | jq -r ".projectStatus.status")
-  #       if [ "$status" != "OK" ]; then
-  #         echo "Quality gate failed"
-  #         curl -X POST \
-  #              -H "Authorization: token $$_GITHUB_TOKEN " \
-  #              -H "Accept: application/vnd.github.v3+json" \
-  #              -d '{"title": "Quality gate failed in Cloud Build", "body": "The quality gate check failed in Cloud Build for project: workspace1101_testinggcp. Please review the build logs and address the issues."}' \
-  #              https://api.github.com/repos/your-username/your-repo/issues
-  #         exit 1
-  #       fi
-  #   secretEnv: ['_SONAR_TOKEN','_IP_TOKEN','_GITHUB_TOKEN]
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        apt-get update && apt-get install -y jq curl openssl
+        apt-get install --only-upgrade curl openssl
+        response=$(curl "http://34.135.193.41:9000/api/qualitygates/project_status?projectKey=testingongcpci" -H "Authorization: $$_SONAR_TOKEN")
+        status=$(echo "$response" | jq -r ".projectStatus.status")
+        if [ "$status" != "OK" ]; then
+          echo "Quality gate failed"
+          curl -X POST \
+               -H "Authorization: token $$_GITHUB_TOKEN " \
+               -H "Accept: application/vnd.github.v3+json" \
+               -d '{"title": "Quality gate failed in Cloud Build", "body": "The quality gate check failed in Cloud Build for project: workspace1101_testinggcp. Please review the build logs and address the issues."}' \
+               https://api.github.com/repos/your-username/your-repo/issues
+          exit 1
+        fi
+    secretEnv: ['_SONAR_TOKEN','_GITHUB_TOKEN]
 availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/6
     env: '_SONAR_TOKEN'
-  # - versionName: projects/364895990307/secrets/mailgun-domain/versions/3
-  #   env: '_GITHUB_TOKEN'
+  - versionName: projects/364895990307/secrets/mailgun-domain/versions/3
+    env: '_GITHUB_TOKEN'
   
       
