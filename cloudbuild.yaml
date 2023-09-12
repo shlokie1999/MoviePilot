@@ -12,28 +12,25 @@ steps:
           -Dsonar.sources=. \
           -Dsonar.host.url=http://34.135.193.41:9000 \
           -Dsonar.login=$$_SONAR_TOKEN
-    secretEnv: ['_SONAR_TOKEN']       
-  - name: 'gcr.io/cloud-builders/gcloud'
+    secretEnv: ['_SONAR_TOKEN']
+  - name: 'gcr.io/cloud-builders/curl'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y jq curl openssl
-        apt-get install --only-upgrade curl openssl
-        response=$(curl "http://34.135.193.41:9000/api/qualitygates/project_status?projectKey=testingongcpci" -H "Authorization: $$_SONAR_TOKEN")
-        status=$(echo "$response" | jq -r ".projectStatus.status")
-        echo $response
-        echo $status
-        if [ "$status" != "OK" ]; then
-          echo "Quality gate failed"
-          echo $status
+        apt-get update && apt-get install -y jq
+        STATUS=$(curl -s -X GET 'http://34.135.193.41:9000/api/qualitygates/project_status?projectKey=testingongcpci' -H 'Authorization: Basic $(echo -n "$$_SONAR_TOKEN:" | base64)' | jq -r .projectStatus.status)
+        echo "Quality Gate Status: $STATUS"
+        if [ "$STATUS" != "OK" ]; then
+          echo "Raising a GitHub issue..."
           curl -X POST \
-               -H "Authorization: token $$_GITHUB_TOKEN " \
+               -H "Authorization: token YOUR_GITHUB_TOKEN" \
                -H "Accept: application/vnd.github.v3+json" \
-               -d '{"title": "Quality gate failed in Cloud Build", "body": "The quality gate check failed in Cloud Build for project: workspace1101_testinggcp. Please review the build logs and address the issues."}' \
+               -d '{"title":"Quality Gate Failed", "body":"Please check the SonarQube dashboard for details."}' \
                https://api.github.com/repos/shlokie1999/MoviePilot/issues
-          exit 1
+          else 1
         fi
+    id: 'fetch_quality_gate'
     secretEnv: ['_SONAR_TOKEN','_GITHUB_TOKEN']
 availableSecrets:
   secretManager:
