@@ -1,82 +1,23 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['pull', 'gcr.io/google.com/cloudsdktool/google-cloud-cli:latest']
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['version']
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['init']
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/mcmp-integration-qa/demo/appimage:latest', '.']
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/demo/appimage:latest']
-  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['pull', 'sonarsource/sonar-scanner-cli:latest']
+  - name: 'sonarsource/sonar-scanner-cli:latest'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        set -e
-        apt-get update && apt-get install -y jq
-        #View metadata associated with the scanned image
-        gcloud beta container images describe --show-package-vulnerability --format=json us-central1-docker.pkg.dev/mcmp-integration-qa/demo/appimage:latest | tee /workspace/vuln.json
-        pwd
-        ls
-        cat /workspace/vuln.json
-        apt-get update && apt-get install -y jq
-        total_vulnerabilities=$(jq '.package_vulnerability_summary.total_vulnerability_found' vuln.json)
-        echo "Total vulnerabilities found: $total_vulnerabilities"
-        medium_severity_count=$(jq '[.package_vulnerability_summary.vulnerabilities.MEDIUM[]? | select(.vulnerability.effectiveSeverity=="MEDIUM")] // empty | length' vuln.json)
-        echo "Total 'MEDIUM' effectiveSeverity vulnerabilities found: $medium_severity_count"
-        critical_severity_count=$(jq '[.package_vulnerability_summary.vulnerabilities.CRITICAL[]? | select(.vulnerability.effectiveSeverity=="CRITICAL")] // empty | length' vuln.json)
-        echo "Total 'CRITICAL' effectiveSeverity vulnerabilities found: $critical_severity_count"
-        high_severity_count=$(jq '[.package_vulnerability_summary.vulnerabilities.HIGH[]? | select(.vulnerability.effectiveSeverity=="HIGH")] // empty | length' vuln.json)
-        echo "Total 'HIGH' effectiveSeverity vulnerabilities found: $high_severity_count"
-        low_severity_count=$(jq '[.package_vulnerability_summary.vulnerabilities.LOW[]? | select(.vulnerability.effectiveSeverity=="LOW")] // empty | length' vuln.json)
-        echo "Total 'LOW' effectiveSeverity vulnerabilities found: $low_severity_count"
-        ls -al
-        if [ "$critical_severity_count" -gt 0 ]; then
-          gcloud pubsub topics publish notify-build-fail --message='Critical vulnerabilities found in image us-central1-docker.pkg.dev/{PROJECT_ID}/REPO-NAME/REPO-NAME:IMAGE-TAG'
-          exit 1
-        fi       
-  - name: 'gcr.io/cloud-builders/gsutil'
-    args: ['cp', 'vuln.json', 'gs://artifact-analysis-scan-report/vuln.json']
-  
-#   # - name: 'gcr.io/cloud-builders/docker'
-#   #   entrypoint: 'bash'
-#   #   args:
-#   #     - '-c'
-#   #     - |
-#   #       docker run -d -p 9001:9000 sonarqube:latest
-#   #       sleep 120
-#   #       docker volume create sonarqube_data
-#   #       docker volume create sonarqube_extensions
-#   #       docker run -d \
-#   #           -p 9001:9000 \
-#   #           --name sonarqube \
-#   #           -v sonarqube_data:/opt/sonarqube/data \
-#   #           -v sonarqube_extensions:/opt/sonarqube/extensions \
-#   #             sonarqube:community 
-  
-#   - name: 'gcr.io/cloud-builders/docker'
-#     args: ['pull', 'sonarsource/sonar-scanner-cli:latest']
-#   - name: 'sonarsource/sonar-scanner-cli:latest'
-#     entrypoint: 'bash'
-#     args:
-#       - '-c'
-#       - |
-#         sonar-scanner \
-#           -X \
-#           -Dsonar.projectKey=testingongcp \
-#           -Dsonar.sources=. \
-#           -Dsonar.host.url=http://localhost:9000 \
-#           -Dsonar.login=$$_SONAR_TOKEN
-#     options:
-#       network: host
-#     secretEnv: ['_SONAR_TOKEN']       
-# availableSecrets:
-#   secretManager:
-#   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/5
-#     env: '_SONAR_TOKEN'
-#   # - versionName: projects/364895990307/secrets/mailgun-domain/versions/3
-#   #   env: '_GITHUB_TOKEN'
+        sonar-scanner \
+          -X \
+          -Dsonar.projectKey=testingongcpci \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=http://34.135.193.41:9000 \
+          -Dsonar.login=$$_SONAR_TOKEN
+     secretEnv: ['_SONAR_TOKEN']       
+availableSecrets:
+  secretManager:
+  - versionName: projects/364895990307/secrets/sonarcloud-token/versions/6
+    env: '_SONAR_TOKEN'
+  # - versionName: projects/364895990307/secrets/mailgun-domain/versions/3
+  #   env: '_GITHUB_TOKEN'
   
       
