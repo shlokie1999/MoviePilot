@@ -33,9 +33,6 @@ steps:
         low_severity_count=$(jq '[.package_vulnerability_summary.vulnerabilities.LOW[]? | select(.vulnerability.effectiveSeverity=="LOW")] // empty | length' vuln.json)
         echo "Total 'LOW' effectiveSeverity vulnerabilities found: $low_severity_count"
         ls -al
-        cat known_false_positives.json
-        mapfile -t false_positives < <(jq -r '.false_positives[]' known_false_positives.json)
-        
         if [ "$critical_severity_count" -gt 0 ]; then
           jq -c '.package_vulnerability_summary.vulnerabilities.CRITICAL[]' vuln.json | while read -r vuln; do
             cve=$(echo "$vuln" | jq -r '.vulnerability.shortDescription')
