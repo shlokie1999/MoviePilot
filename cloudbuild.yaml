@@ -40,8 +40,7 @@ steps:
             echo "Build failed due to real 'CRITICAL' vulnerabilities."
             gcloud pubsub topics publish notify-build-fail --message='Critical vulnerabilities found in image us-central1-docker.pkg.dev/{PROJECT_ID}/REPO-NAME/REPO-NAME:IMAGE-TAG'
             exit 1
-        fi
-        
+            
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', 'vuln.json', 'gs://artifact-analysis-scan-report/vuln.json']
   
