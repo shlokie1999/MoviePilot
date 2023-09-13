@@ -13,7 +13,7 @@ steps:
           -Dsonar.host.url=http://34.135.193.41:9000 \
           -Dsonar.login=$$_SONAR_TOKEN
     secretEnv: ['_SONAR_TOKEN']
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'gcr.io/cloud-buildersgcloud'
     entrypoint: 'bash'
     args:
       - '-c'
