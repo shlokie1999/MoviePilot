@@ -9,22 +9,13 @@ steps:
         apt-get update && apt-get -y install jq
         apt-get install -y wget
         apt-get install -y maven
-        mkdir temp
-        cd temp
-        wget https://dl.google.com/go/go1.19.linux-amd64.tar.gz
-        tar -xvf go1.19.linux-amd64.tar.gz
-        mv go $_GOROOT
-        export GOROOT=$_GOROOT
-        export GOPATH=$_GOPATH
-        export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
-        cd ..
-        go version
   # Pre-build phase: Instead of installing Nuclei via Go, pull and use the Docker image
   - name: 'docker'
     args: ['pull', 'projectdiscovery/nuclei']
   # Clone nuclei-templates
   - name: 'gcr.io/cloud-builders/git'
     args: ['clone', 'https://github.com/projectdiscovery/nuclei-templates.git']
+  
   # Run nuclei scan using the Docker image
   - name: 'docker'
     args: 
@@ -40,10 +31,6 @@ steps:
       - '-o'
       - 'scan_report.txt'
       
-substitutions:
-  _CUSTOM_GOPATH: go
-  _GOPATH: /workspace/go
-  _GOROOT: /usr/local/go
 artifacts:
   objects:
     location: 'gs://nuclei-scan-reports/'  # Update this with your bucket name
