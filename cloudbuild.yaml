@@ -9,9 +9,11 @@ steps:
         apt-get update && apt-get -y install jq
         apt-get install -y wget
         apt-get install -y maven
+        
   # Pre-build phase: Instead of installing Nuclei via Go, pull and use the Docker image
   - name: 'docker'
     args: ['pull', 'projectdiscovery/nuclei']
+    
   # Clone nuclei-templates
   - name: 'gcr.io/cloud-builders/git'
     args: ['clone', 'https://github.com/projectdiscovery/nuclei-templates.git']
@@ -23,14 +25,16 @@ steps:
       - '--rm'
       - '-v'
       - '/workspace/nuclei-templates:/app/nuclei-templates'
+      - '-v'
+      - '/workspace:/app'
       - 'projectdiscovery/nuclei'
       - '-u'
       - 'https://localhost:8000'
       - '-t'
       - '/app/nuclei-templates/'
       - '-o'
-      - 'scan_report.txt'
-  
+      - '/app/scan_report.txt'
+
 artifacts:
   objects:
     location: 'gs://nuclei-scan-reports/'  # Update this with your bucket name
