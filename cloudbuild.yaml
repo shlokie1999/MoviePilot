@@ -1,5 +1,3 @@
-
-
 steps:
   # Install phase
   - name: 'ubuntu'
@@ -15,21 +13,18 @@ steps:
         cd temp
         wget https://dl.google.com/go/go1.19.linux-amd64.tar.gz
         tar -xvf go1.19.linux-amd64.tar.gz
-        mv go /usr/local
-        export GOROOT=/usr/local/go
-        export GOPATH=$(pwd)/$_CUSTOM_GOPATH
+        mv go $_GOROOT
+        export GOROOT=$_GOROOT
+        export GOPATH=$_GOPATH
         export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
         cd ..
         go version
-
   # Pre-build phase: Instead of installing Nuclei via Go, pull and use the Docker image
   - name: 'docker'
     args: ['pull', 'projectdiscovery/nuclei']
-
   # Clone nuclei-templates
   - name: 'gcr.io/cloud-builders/git'
     args: ['clone', 'https://github.com/projectdiscovery/nuclei-templates.git']
-
   # Run nuclei scan using the Docker image
   - name: 'docker'
     args: 
@@ -47,6 +42,8 @@ steps:
       
 substitutions:
   _CUSTOM_GOPATH: go
+  _GOPATH: /workspace/go
+  _GOROOT: /usr/local/go
 artifacts:
   objects:
     location: 'gs://nuclei-scan-reports/'  # Update this with your bucket name
