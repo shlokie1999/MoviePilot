@@ -18,6 +18,7 @@ steps:
     args:
       - '-c'
       - |
+        set -e
         apt-get update && apt-get install -y jq
         _STATUS=$(curl -s -X GET 'http://34.135.193.41:9000/api/qualitygates/project_status?projectKey=testingongcpci' -H 'Authorization: Basic $(echo -n "$$_SONAR_TOKEN:" | base64)' | jq -r .projectStatus.status)
         echo "Quality Gate Status: $_STATUS"
