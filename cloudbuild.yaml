@@ -22,7 +22,7 @@ steps:
       - 'run'
       - '--rm'
       - '-v'
-      - '$PWD/nuclei-templates:/app/nuclei-templates'
+      - '/workspace/nuclei-templates:/app/nuclei-templates'
       - 'projectdiscovery/nuclei'
       - '-u'
       - 'https://localhost:8000'
@@ -30,7 +30,7 @@ steps:
       - '/app/nuclei-templates/'
       - '-o'
       - 'scan_report.txt'
-      
+  
 artifacts:
   objects:
     location: 'gs://nuclei-scan-reports/'  # Update this with your bucket name
