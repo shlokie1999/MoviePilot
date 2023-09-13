@@ -1,3 +1,5 @@
+
+
 steps:
   # Install phase
   - name: 'ubuntu'
@@ -15,32 +17,36 @@ steps:
         tar -xvf go1.19.linux-amd64.tar.gz
         mv go /usr/local
         export GOROOT=/usr/local/go
-        export GOPATH=$HOME/go
+        export GOPATH=$(pwd)/$_CUSTOM_GOPATH
         export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
         cd ..
         go version
 
-  # Pre-build phase
-  - name: 'gcr.io/cloud-builders/go'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
-        nuclei -version
-        nuclei -h
-        git clone https://github.com/projectdiscovery/nuclei-templates.git
-        ls
+  # Pre-build phase: Instead of installing Nuclei via Go, pull and use the Docker image
+  - name: 'docker'
+    args: ['pull', 'projectdiscovery/nuclei']
 
-  # Build phase
-  - name: 'gcr.io/cloud-builders/go'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        nuclei -u http://localhost:8000 -t nuclei-templates/ -o scan_report.txt
-        ls
+  # Clone nuclei-templates
+  - name: 'gcr.io/cloud-builders/git'
+    args: ['clone', 'https://github.com/projectdiscovery/nuclei-templates.git']
 
+  # Run nuclei scan using the Docker image
+  - name: 'docker'
+    args: 
+      - 'run'
+      - '--rm'
+      - '-v'
+      - '$PWD/nuclei-templates:/app/nuclei-templates'
+      - 'projectdiscovery/nuclei'
+      - '-u'
+      - 'https://localhost:8000'
+      - '-t'
+      - '/app/nuclei-templates/'
+      - '-o'
+      - 'scan_report.txt'
+      
+substitutions:
+  _CUSTOM_GOPATH: go
 artifacts:
   objects:
     location: 'gs://nuclei-scan-reports/'  # Update this with your bucket name
