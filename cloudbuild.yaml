@@ -30,7 +30,7 @@ steps:
                -d '{"title":"Quality Gate Failed", "body":"Please check the SonarQube dashboard for details."}' \
                https://api.github.com/repos/shlokie1999/MoviePilot/issues
           else 1
-        fi
+        fi #
     id: 'fetch_quality_gate'
     secretEnv: ['_SONAR_TOKEN','_GITHUB_TOKEN']
 availableSecrets:
