@@ -20,20 +20,20 @@ steps:
   
   # Run nuclei scan using the Docker image
   - name: 'docker'
-    args: 
+    args:
       - 'run'
       - '--rm'
       - '-v'
-      - '/workspace/nuclei-templates:/app/nuclei-templates'
-      - '-v'
       - '/workspace:/app'
       - 'projectdiscovery/nuclei'
-      - '-u'
-      - 'https://localhost:8000'
+      - '-l'
+      - '/app/target_urls.txt'
       - '-t'
       - '/app/nuclei-templates/'
       - '-o'
       - '/app/scan_report.txt'
+      - '-c'
+      - '50'
 
 artifacts:
   objects:
