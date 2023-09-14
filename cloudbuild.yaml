@@ -34,7 +34,6 @@ steps:
       - '/app/scan_report.txt'
       - '-c'
       - '50'
-
 artifacts:
   objects:
     location: 'gs://nuclei-scan-reports/'  # Update this with your bucket name
