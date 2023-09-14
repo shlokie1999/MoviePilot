@@ -11,15 +11,19 @@ steps:
         apt-get install -y maven
         
   # Pre-build phase: Instead of installing Nuclei via Go, pull and use the Docker image
-  - name: 'docker'
+  - name: 'gcr.io/cloud-builders/docker'
     args: ['pull', 'projectdiscovery/nuclei']
     
   # Clone nuclei-templates
   - name: 'gcr.io/cloud-builders/git'
     args: ['clone', 'https://github.com/projectdiscovery/nuclei-templates.git']
-  
+
+  # Nuclei help
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['run','--rm','projectdiscovery/nuclei','-h']
+
   # Run nuclei scan using the Docker image
-  - name: 'docker'
+  - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'run'
       - '--rm'
@@ -35,7 +39,7 @@ steps:
       - '-c'
       - '50'
       - '--timeout'
-      - '10s'
+      - '10'
       - '--retries'
       - '3'
       - '--delay'
