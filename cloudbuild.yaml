@@ -31,13 +31,19 @@ steps:
       - '-t'
       - '/app/nuclei-templates/'
       - '-o'
-      - '/app/scan_report.txt'
+      - '/app/scan_report.json'
       - '-c'
       - '50'
+      - '--timeout'
+      - '10s'
+      - '--retries'
+      - '3'
+      - '--delay'
+      - '500ms'
 artifacts:
   objects:
     location: 'gs://nuclei-scan-reports/'  # Update this with your bucket name
-    paths: ['scan_report.txt']
+    paths: ['scan_report.json']
 
 
       
