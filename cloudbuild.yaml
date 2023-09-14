@@ -13,6 +13,10 @@ steps:
   # Pre-build phase: Instead of installing Nuclei via Go, pull and use the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['pull', 'projectdiscovery/nuclei']
+
+  - name: 'gcr.io/cloud-builders/go'
+    args: ['install', '-v', 'github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest']
+    env: ['GOPATH=/workspace']
     
   # Clone nuclei-templates
   - name: 'gcr.io/cloud-builders/git'
