@@ -22,7 +22,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['run','--rm','projectdiscovery/nuclei','-h']
 
-  Run nuclei scan using the Docker image
+  #Run nuclei scan using the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'run'
