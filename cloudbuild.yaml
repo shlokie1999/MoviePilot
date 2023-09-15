@@ -38,17 +38,17 @@ steps:
       - '/app/scan_report.json'
       - '-c' # flag to support parallel scanning for optimization. 'c' represents concurrency.
       - '50'
-      # - '-rl'
-      # - '100'  
-      # - '-rlm'
-      # - '6000' 
-      # - '-bs' # maximum number of hosts to be analyzed in parallel per template
-      # - '20'   
-      # - '-hbs' # maximum number of headless hosts to be analyzed in parallel per template
-      # - '8'   
-      # - '-headc' # maximum number of headless templates to be executed in parallel
-      # - '5' 
-    # Parse the JSON to get entries with severity "critical"
+      - '-rl'
+      - '100'  
+      - '-rlm'
+      - '6000' 
+      - '-bs' # maximum number of hosts to be analyzed in parallel per template
+      - '20'   
+      - '-hbs' # maximum number of headless hosts to be analyzed in parallel per template
+      - '8'   
+      - '-headc' # maximum number of headless templates to be executed in parallel
+      - '5' 
+    Parse the JSON to get entries with severity "critical"
 
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
@@ -56,7 +56,7 @@ steps:
       - '-c'
       - |
         apt-get update && apt-get install -y jq
-        _CRITICAL_ENTRIES=$(jq '.[] | select(.info.severity == "low")' scan_report.json)
+        _CRITICAL_ENTRIES=$(jq '.[] | select(.info.severity == "low")' /workspace/scan_report.json)
         _CRITICAL_COUNT=$(echo "$_CRITICAL_ENTRIES" | jq -s '. | length')
         echo "Found $_CRITICAL_COUNT critical vulnerabilities"
         if [ "$_CRITICAL_COUNT" -gt 0 ]; then
