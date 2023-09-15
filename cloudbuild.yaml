@@ -23,6 +23,36 @@ steps:
     args: ['run','--rm','projectdiscovery/nuclei','-h']
 
   # Run nuclei scan using the Docker image
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args:
+  #     - 'run'
+  #     - '--rm'
+  #     - '-v'
+  #     - '/workspace:/app'
+  #     - 'projectdiscovery/nuclei'
+  #     - '-l'
+  #     - '/app/target_urls.txt'
+  #     - '-t'
+  #     - '/app/nuclei-templates/'
+  #     - '-o'
+  #     - '/app/scan_report.json'
+  #     - '-c'
+  #     - '50'
+  #     - '--timeout'
+  #     - '10'
+  #     - '--retries'
+  #     - '3'
+  #     - '-rl'
+  #     - '100'  # adjust as needed
+  #     - '-rlm'
+  #     - '6000' # adjust as needed
+  #     - '-bs'
+  #     - '20'   # adjust as needed
+  #     - '-hbs'
+  #     - '8'    # adjust as needed
+  #     - '-headc'
+  #     - '5' 
+ # Run nuclei scan using the custom templates
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'run'
@@ -30,22 +60,18 @@ steps:
       - '-v'
       - '/workspace:/app'
       - 'projectdiscovery/nuclei'
-      - '-l'
-      - '/app/target_urls.txt'
+      - '-u'
+      - '/app/https://success.qualys.com/'
       - '-t'
-      - '/app/nuclei-templates/'
+      - '/app/critical-check.yaml'
       - '-o'
-      - '/app/scan_report.json'
-      - '-c'
-      - '50'
-      - '--timeout'
-      - '10'
-      - '--retries'
-      - '3'
+      - '/app/custom_scan_report.json'
+      
+
 artifacts:
   objects:
     location: 'gs://nuclei-scan-reports/'  # Update this with your bucket name
-    paths: ['scan_report.json']
+    paths: ['custom_scan_report.json']
 
 
       
