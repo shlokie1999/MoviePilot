@@ -22,37 +22,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['run','--rm','projectdiscovery/nuclei','-h']
 
-  # Run nuclei scan using the Docker image
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args:
-  #     - 'run'
-  #     - '--rm'
-  #     - '-v'
-  #     - '/workspace:/app'
-  #     - 'projectdiscovery/nuclei'
-  #     - '-l'
-  #     - '/app/target_urls.txt'
-  #     - '-t'
-  #     - '/app/nuclei-templates/'
-  #     - '-o'
-  #     - '/app/scan_report.json'
-  #     - '-c'
-  #     - '50'
-  #     - '--timeout'
-  #     - '10'
-  #     - '--retries'
-  #     - '3'
-  #     - '-rl'
-  #     - '100'  # adjust as needed
-  #     - '-rlm'
-  #     - '6000' # adjust as needed
-  #     - '-bs'
-  #     - '20'   # adjust as needed
-  #     - '-hbs'
-  #     - '8'    # adjust as needed
-  #     - '-headc'
-  #     - '5' 
- # Run nuclei scan using the custom templates
+  Run nuclei scan using the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'run'
@@ -60,18 +30,63 @@ steps:
       - '-v'
       - '/workspace:/app'
       - 'projectdiscovery/nuclei'
-      - '-u'
-      - '/app/https://success.qualys.com/'
+      - '-l'
+      - '/app/target_urls.txt'
       - '-t'
-      - '/app/critical-check.yaml'
-      - '-o'
-      - '/app/custom_scan_report.json'
+      - '/app/nuclei-templates/'
+      - '-je'
+      - '/app/scan_report.json'
+      - '-c' # flag to support parallel scanning for optimization. 'c' represents concurrency.
+      - '50'
+      # - '-rl'
+      # - '100'  
+      # - '-rlm'
+      # - '6000' 
+      # - '-bs' # maximum number of hosts to be analyzed in parallel per template
+      # - '20'   
+      # - '-hbs' # maximum number of headless hosts to be analyzed in parallel per template
+      # - '8'   
+      # - '-headc' # maximum number of headless templates to be executed in parallel
+      # - '5' 
+
+# # Check for critical findings and raise GitHub issue if found
+# - name: 'gcr.io/cloud-builders/gcloud'
+#   entrypoint: 'bash'
+#   args:
+#     - '-c'
+#     - |
+#       grep "\[critical\]" /app/scan_report.txt > /app/critical_findings.txt
+#       if [ -s /app/critical_findings.txt ]; then
+#         # Use the GitHub API to raise an issue
+#         curl -X POST -H "Authorization: token $GITHUB_TOKEN" -d '{
+#           "title": "Critical Nuclei Finding Detected",
+#           "body": "A critical finding was detected during the Nuclei scan. Please investigate. Findings: $(cat /app/critical_findings.txt)",
+#           "labels": ["bug", "critical"]
+#         }' https://api.github.com/repos/yourusername/yourrepo/issues
+#       fi
+#   secretEnv:
+#     - GITHUB_TOKEN
+
+
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args:
+#       - 'run'
+#       - '--rm'
+#       - '-v'
+#       - '/workspace:/app'
+#       - 'projectdiscovery/nuclei'
+#       - '-u'
+#       - '/app/https://success.qualys.com/'
+#       - '-t'
+#       - '/app/critical-check.yaml'
+#       - '-o'
+#       - '/app/custom_scan_report.json'
       
 
 artifacts:
   objects:
-    location: 'gs://nuclei-scan-reports/'  # Update this with your bucket name
-    paths: ['custom_scan_report.json']
+    location: 'gs://nuclei-report/'  # Update this with your bucket name
+    paths: ['scan_report.json']
 
 
       
