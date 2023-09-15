@@ -47,8 +47,7 @@ steps:
       - '-hbs' # maximum number of headless hosts to be analyzed in parallel per template
       - '8'   
       - '-headc' # maximum number of headless templates to be executed in parallel
-      - '5' 
-    Parse the JSON to get entries with severity "critical"
+      - '5'
 
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
