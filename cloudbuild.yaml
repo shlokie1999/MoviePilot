@@ -55,7 +55,7 @@ steps:
     args:
       - '-c'
       - |
-        apt-get update && apt-get update -y jq
+        apt-get update && apt-get install -y jq
         _CRITICAL_ENTRIES=$(jq '.[] | select(.info.severity == "low")' scan_report.json)
         _CRITICAL_COUNT=$(echo "$_CRITICAL_ENTRIES" | jq -s '. | length')
         echo "Found $_CRITICAL_COUNT critical vulnerabilities"
