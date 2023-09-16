@@ -66,29 +66,29 @@ steps:
       - '-je'
       - '/app/nuclei_output_file.json'
 
-#   - name: 'gcr.io/cloud-builders/gcloud'
-#     entrypoint: 'bash'
-#     args:
-#       - '-c'
-#       - |
-#         apt-get update && apt-get install -y jq
-#         _CRITICAL_ENTRIES=$(jq '.[] | select(.info.severity == "low")' /workspace/scan_report.json)
-#         echo $_CRITICAL_ENTRIES
-#         _CRITICAL_COUNT=$(echo "$_CRITICAL_ENTRIES" | jq -s '. | length')
-#         echo $
-#         echo "Found $_CRITICAL_COUNT critical vulnerabilities"
-#         if [ "$_CRITICAL_COUNT" -gt 0 ]; then
-#             curl -X POST \
-#                -H "Authorization: token $$_GITHUB_TOKEN " \
-#                -H "Accept: application/vnd.github.v3+json" \
-#                -d '{"title": "Critical finding found. Please review the findings in report and address the issues."}' \
-#                https://api.github.com/repos/shlokie1999/MoviePilot/issues
-#         fi
-#     secretEnv: ['_GITHUB_TOKEN']
-# availableSecrets:
-#   secretManager:
-#   - versionName: projects/364895990307/secrets/mailgun-api-key/versions/2
-#     env: '_GITHUB_TOKEN'
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        apt-get update && apt-get install -y jq
+        _CRITICAL_ENTRIES=$(jq '.[] | select(.info.severity == "low")' /workspace/scan_report.json)
+        echo $_CRITICAL_ENTRIES
+        _CRITICAL_COUNT=$(echo "$_CRITICAL_ENTRIES" | jq -s '. | length')
+        echo $
+        echo "Found $_CRITICAL_COUNT critical vulnerabilities"
+        if [ "$_CRITICAL_COUNT" -gt 0 ]; then
+            curl -X POST \
+               -H "Authorization: token $$_GITHUB_TOKEN " \
+               -H "Accept: application/vnd.github.v3+json" \
+               -d '{"title": "Critical finding found. Please review the findings in report and address the issues."}' \
+               https://api.github.com/repos/shlokie1999/MoviePilot/issues
+        fi
+    secretEnv: ['_GITHUB_TOKEN']
+availableSecrets:
+  secretManager:
+  - versionName: projects/364895990307/secrets/mailgun-api-key/versions/2
+    env: '_GITHUB_TOKEN'
 
 
   # - name: 'gcr.io/cloud-builders/docker'
