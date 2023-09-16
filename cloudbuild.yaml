@@ -62,7 +62,7 @@ steps:
       - '-t'
       - '/app/nuclei-templates'
       - '-severity'
-      - 'critical'
+      - 'low'
       - '-je'
       - '/app/nuclei_output_file.json'
 
