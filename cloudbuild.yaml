@@ -56,7 +56,9 @@ steps:
       - |
         apt-get update && apt-get install -y jq
         _CRITICAL_ENTRIES=$(jq '.[] | select(.info.severity == "low")' /workspace/scan_report.json)
+        echo $_CRITICAL_ENTRIES
         _CRITICAL_COUNT=$(echo "$_CRITICAL_ENTRIES" | jq -s '. | length')
+        echo $
         echo "Found $_CRITICAL_COUNT critical vulnerabilities"
         if [ "$_CRITICAL_COUNT" -gt 0 ]; then
             curl -X POST \
@@ -72,19 +74,19 @@ availableSecrets:
     env: '_GITHUB_TOKEN'
 
 
-#   - name: 'gcr.io/cloud-builders/docker'
-#     args:
-#       - 'run'
-#       - '--rm'
-#       - '-v'
-#       - '/workspace:/app'
-#       - 'projectdiscovery/nuclei'
-#       - '-u'
-#       - '/app/https://success.qualys.com/'
-#       - '-t'
-#       - '/app/critical-check.yaml'
-#       - '-o'
-#       - '/app/custom_scan_report.json'
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args:
+  #     - 'run'
+  #     - '--rm'
+  #     - '-v'
+  #     - '/workspace:/app'
+  #     - 'projectdiscovery/nuclei'
+  #     - '-u'
+  #     - '/app/https://success.qualys.com/'
+  #     - '-t'
+  #     - '/app/critical-check.yaml'
+  #     - '-o'
+  #     - '/app/custom_scan_report.json'
       
 
 artifacts:
