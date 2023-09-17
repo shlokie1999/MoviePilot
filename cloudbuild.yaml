@@ -75,8 +75,10 @@ steps:
         severities=$(jq -r '.[] | .info.severity' /workspace/nuclei_output_file.json)
         echo "Severities found:"
         echo "$severities"
-        _LOW_COUNT=$(echo "$severities" | grep -c "low")
+        _LOW_COUNT=$(echo "$severities" | awk '{if ($0=="low") count++} END {print count}')
         echo "Low severity count: $_LOW_COUNT"
+        # _LOW_COUNT=$(echo "$severities" | grep -c "low")
+        # echo "Low severity count: $_LOW_COUNT"
         # apt-get update && apt-get install -y jq
         # echo "Contents of scan_report.json:"
         # cat /workspace/nuclei_output_file.json
