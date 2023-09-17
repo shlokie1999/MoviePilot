@@ -72,16 +72,15 @@ steps:
       - '-c'
       - |
         apt-get update && apt-get install -y jq
-        severities=$(jq -r '.[] | .info.severity' /workspace/nuclei_output_file.json)
-        echo "Severities found:"
-        echo "$severities"
-        _LOW_COUNT=0
-        for severity in $severities; do
-            if [ "$severity" == "low" ]; then
-                _LOW_COUNT=$((_LOW_COUNT + 1))
-            fi
-        done
+        jq -r '.[] | .info.severity' /workspace/nuclei_output_file.json > /tmp/severities.txt
+        cat severities.txt
+        _LOW_COUNT=$(grep -c "low" /tmp/severities.txt)
         echo "Low severity count: $_LOW_COUNT"
+
+        # severities=$(jq -r '.[] | .info.severity' /workspace/nuclei_output_file.json)
+        # echo "Severities found:"
+        # echo "$severities"
+  
         
 #         if [ "$_CRITICAL_COUNT" -gt 0 ]; then
 #             curl -X POST \
