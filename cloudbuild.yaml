@@ -74,8 +74,8 @@ steps:
         apt-get update && apt-get install -y jq
         echo "Contents of scan_report.json:"
         cat /workspace/nuclei_output_file.json
-        jq '.[] | if .info.severity == "low" then . else empty end' /workspace/nuclei_output_file.json
-
+        jq '.[] | .info.severity' /workspace/nuclei_output_file.json
+        jq '.[] | .info.severity' /workspace/nuclei_output_file.json | grep "low" | wc -l
         # jq '.[] | select(.info.severity == "low")' /workspace/nuclei_output_file.json
         # jq '.[] | .info.severity' /workspace/nuclei_output_file.json
         # jq '[.[] | select(.info.severity == "low")]' /workspace/nuclei_output_file.json
