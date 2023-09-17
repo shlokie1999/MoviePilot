@@ -74,11 +74,13 @@ steps:
         apt-get update && apt-get install -y jq
         echo "Contents of scan_report.json:"
         cat /workspace/nuclei_output_file.json
-        _LOW_ENTRIES=$(jq '.[] | select(.info.severity == "low")' /workspace/nuclei_output_file.json)
-        echo "Extracted critical entries:"
-        echo "$_LOW_ENTRIES"
-        _LOW_COUNT=$(echo "$_LOW_ENTRIES" | jq -s '. | length')
-        echo "Found $_LOW_COUNT low vulnerabilities"
+        jq '.[] | select(.info.severity == "low")' /workspace/nuclei_output_file.json
+
+        # _LOW_ENTRIES=$(jq '.[] | select(.info.severity == "low")' /workspace/nuclei_output_file.json)
+        # echo "Extracted critical entries:"
+        # echo "$_LOW_ENTRIES"
+        # _LOW_COUNT=$(echo "$_LOW_ENTRIES" | jq -s '. | length')
+        # echo "Found $_LOW_COUNT low vulnerabilities"
 #         apt-get update && apt-get install -y jq
 #         _CRITICAL_ENTRIES=$(jq '.[] | select(.info.severity == "low")' /workspace/nuclei_output_file.json)
 #         echo $_CRITICAL_ENTRIES
