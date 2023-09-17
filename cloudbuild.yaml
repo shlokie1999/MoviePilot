@@ -73,9 +73,8 @@ steps:
       - |
         apt-get update && apt-get install -y jq
         severities=$(jq -r '.[] | .info.severity' /workspace/nuclei_output_file.json)
-        echo "Severities found:"
-        echo "$severities"
-        _LOW_COUNT=$(echo "$severities" | awk '{if ($0=="low") count++} END {print count}')
+        echo "$severities" > /workspace/severity_test.txt
+        _LOW_COUNT=$(awk '/low/ {count++} END {print count}' /workspace/severity_test.txt)
         echo "Low severity count: $_LOW_COUNT"
         # _LOW_COUNT=$(echo "$severities" | grep -c "low")
         # echo "Low severity count: $_LOW_COUNT"
