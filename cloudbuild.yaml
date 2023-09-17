@@ -72,9 +72,9 @@ steps:
       - '-c'
       - |
         apt-get update && apt-get install -y jq
-        jq -r '.[] | .info.severity' /workspace/nuclei_output_file.json > /tmp/severities.txt
+        jq -r '.[] | .info.severity' /workspace/nuclei_output_file.json > /workspace/severities.txt
         cat severities.txt
-        _LOW_COUNT=$(grep -c "low" /tmp/severities.txt)
+        _LOW_COUNT=$(grep -c "low" /workspace/severities.txt)
         echo "Low severity count: $_LOW_COUNT"
 
         # severities=$(jq -r '.[] | .info.severity' /workspace/nuclei_output_file.json)
