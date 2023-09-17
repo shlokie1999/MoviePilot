@@ -71,11 +71,19 @@ steps:
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y jq
-        echo "Contents of scan_report.json:"
-        cat /workspace/nuclei_output_file.json
-        _LOW_COUNT=$(cat /workspace/nuclei_output_file.json | jq -r '.[] | .info.severity' | grep -c "low")
-        echo "Low severity count: $_LOW_COUNT"
+        echo "Counting low severity vulnerabilities..."
+        count=0
+        while IFS= read -r line; do
+          if [[ "$line" == *"\"severity\": \"low\""* ]]; then
+            ((count++))
+          fi
+        done < /workspace/nuclei_output_file.json
+        echo "Low severity count: $count"
+        # apt-get update && apt-get install -y jq
+        # echo "Contents of scan_report.json:"
+        # cat /workspace/nuclei_output_file.json
+        # _LOW_COUNT=$(cat /workspace/nuclei_output_file.json | jq -r '.[] | .info.severity' | grep -c "low")
+        # echo "Low severity count: $_LOW_COUNT"
         # _SEVERITIES=$(cat /workspace/nuclei_output_file.json | jq '.[] | .info.severity')
         # echo "Extracted severities:"
         # echo "$_SEVERITIES"
