@@ -74,7 +74,9 @@ steps:
         apt-get update && apt-get install -y jq
         echo "Contents of scan_report.json:"
         cat /workspace/nuclei_output_file.json
-        jq '.[] | select(.info.severity == "low")' /workspace/nuclei_output_file.json
+        jq '.' /workspace/nuclei_output_file.json
+        jq '.[].info.severity' /workspace/nuclei_output_file.json
+        # jq '.[] | select(.info.severity == "low")' /workspace/nuclei_output_file.json
 
         # _LOW_ENTRIES=$(jq '.[] | select(.info.severity == "low")' /workspace/nuclei_output_file.json)
         # echo "Extracted critical entries:"
