@@ -71,10 +71,12 @@ steps:
     args:
       - '-c'
       - |
+        apt-get update && apt-get install -y grep
         apt-get update && apt-get install -y jq
         echo "Contents of scan_report.json:"
         cat /workspace/nuclei_output_file.json
-        jq '[.[] | select(.info.severity == "low")]' /workspace/nuclei_output_file.json
+        grep "low" /workspace/nuclei_output_file.json
+        # jq '[.[] | select(.info.severity == "low")]' /workspace/nuclei_output_file.json
         # jq '.' /workspace/nuclei_output_file.json
         # jq '.[].info.severity' /workspace/nuclei_output_file.json
         # jq '.[] | select(.info.severity == "low")' /workspace/nuclei_output_file.json
