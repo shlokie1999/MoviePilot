@@ -3,14 +3,9 @@ steps:
     entrypoint: /bin/sh
     args:
       - '-c'
-      - 'pip install truffleHog'
-      
-  - name: 'python:3.8-slim'
-    entrypoint: /bin/sh
-    args:
-      - '-c'
-      - 'trufflehog --regex --repo_path . https://github.com/shlokie1999/MoviePilot --json > trufflehog_scanReport.json'
-
+      - |
+        pip install truffleHog
+        trufflehog --regex --repo_path . https://github.com/shlokie1999/MoviePilot --json > trufflehog_scanReport.json
 
 #   - name: 'docker'
 #     args: 
