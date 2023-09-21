@@ -1,32 +1,34 @@
 steps:
-  - name: 'python:3.8-slim'
-    entrypoint: /bin/sh
-    args:
-      - '-c'
-      - |
-        export GIT_PYTHON_REFRESH=quiet
-        pip install --upgrade pip
-        pip install truffleHog
-        trufflehog --regex --repo_path . https://github.com/shlokie1999/MoviePilot --json > trufflehog_scanReport.json
+  # - name: 'python:3.8-slim'
+  #   entrypoint: /bin/sh
+  #   args:
+  #     - '-c'
+  #     - |
+  #       export GIT_PYTHON_REFRESH=quiet
+  #       pip install --upgrade pip
+  #       pip install truffleHog
+  #       trufflehog --regex --repo_path . https://github.com/shlokie1999/MoviePilot --json > trufflehog_scanReport.json
 
 
-#   - name: 'docker'
-#     args: 
-#       - 'pull'
-#       - 'trufflesecurity/trufflehog:latest'
+  - name: 'docker'
+    args: 
+      - 'pull'
+      - 'trufflesecurity/trufflehog:latest'
       
-#   - name: 'docker'
-#     args: 
-#       - 'run'
-#       - '--rm'
-#       - '-v'
-#       - './src:/src'
-#       - 'trufflesecurity/trufflehog'
-#       - 'github'
-#       - '--repo'
-#       - 'https://github.com/shlokie1999/MoviePilot'
-#       - '--json'
-#       # - ' > /src/trufflehog_output.json'
+  - name: 'docker'
+    args: 
+      - 'run'
+      - '--rm'
+      - '-v'
+      - './src:/src'
+      - 'trufflesecurity/trufflehog'
+      - 'github'
+      - '--repo'
+      - 'https://github.com/shlokie1999/MoviePilot'
+      - '--regex'
+      - '--entropy=True'
+      - '--json'
+      - ' > /src/trufflehog_output.json'
 
 artifacts:
   objects:
