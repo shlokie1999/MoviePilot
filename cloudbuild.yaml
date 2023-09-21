@@ -15,6 +15,7 @@ steps:
       - '--repo'
       - 'https://github.com/shlokie1999/MoviePilot'
       - '--json'
+      - '/src/trufflehog_output.json'
 artifacts:
   objects:
     location: 'gs://trufflehog-scan/'  # Update this with your bucket name
