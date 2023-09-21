@@ -15,9 +15,7 @@ steps:
       - '--repo'
       - 'https://github.com/shlokie1999/MoviePilot'
       - '--json'
-      - '--regex'
-      - '--entropy=True'
-      - ' > /src/trufflehog_output.json'
+      # - ' > /src/trufflehog_output.json'
 
 artifacts:
   objects:
