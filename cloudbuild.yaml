@@ -25,15 +25,14 @@ steps:
       - 'github'
       - '--repo'
       - 'https://github.com/shlokie1999/MoviePilot'
-      - '--regex'
       - '--entropy=True'
       - '--json'
-      - ' > /src/trufflehog_output.json'
+      - '/src/trufflehog_output.json'
 
 artifacts:
   objects:
     location: 'gs://trufflehog-scan/'  # Update this with your bucket name
-    paths: ['trufflehog_scanReport.json']
+    paths: ['trufflehog_output.json']
 
 
       
