@@ -25,7 +25,6 @@ steps:
       - 'github'
       - '--repo'
       - 'https://github.com/shlokie1999/MoviePilot'
-      - '--entropy=True'
       - '--json'
       - '/src/trufflehog_output.json'
 
