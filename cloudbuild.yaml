@@ -5,8 +5,7 @@ steps:
       - '-c'
       - 'pip install truffleHog'
       
-  - name: 'trufflehog-scan'
-    image: 'python:3.8-slim'  # Use a different name to indicate this is a new step
+  - name: 'python:3.8-slim'
     entrypoint: /bin/sh
     args:
       - '-c'
