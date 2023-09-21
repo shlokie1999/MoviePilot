@@ -1,11 +1,14 @@
 steps:
-  - name: 'python:3.8-slim'
+  - name: 'ubuntu:latest'
     entrypoint: /bin/sh
     args:
       - '-c'
       - |
-        pip install truffleHog
-        truffleHog --regex --repo_path . https://github.com/shlokie1999/MoviePilot --json > trufflehog_scanReport.json
+        apt-get update
+        apt-get install -y python3-pip  # Install pip
+        pip3 install truffleHog>=2.1.0,<3.0       # Install Trufflehog
+        trufflehog --repo https://github.com/shlokie1999/MoviePilot --regex --entropy=False --json > trufflehog_output.json
+
 
 
   # - name: 'docker'
