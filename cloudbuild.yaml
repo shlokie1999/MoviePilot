@@ -4,10 +4,11 @@ steps:
     args:
       - '-c'
       - |
-        apt-get update
-        apt-get install -y git
+        export GIT_PYTHON_REFRESH=quiet
+        pip install --upgrade pip
         pip install truffleHog
         trufflehog --regex --repo_path . https://github.com/shlokie1999/MoviePilot --json > trufflehog_scanReport.json
+
 
 #   - name: 'docker'
 #     args: 
