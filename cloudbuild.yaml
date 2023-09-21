@@ -1,19 +1,17 @@
 steps:
   - name: 'python:3.8-slim'
-    entrypoint: 'pip'
-    args: ['install', 'truffleHog']
-
-# Step to run TruffleHog
-  - name: 'python:3.8-slim'
-    entrypoint: 'bash'
+    entrypoint: /bin/sh
     args:
       - '-c'
-      - |
-        trufflehog --regex --repo_path . https://github.com/shlokie1999/MoviePilot --json src > trufflehog_output.json
+      - 'pip install truffleHog'
+      
+  - name: 'trufflehog-scan'
+    image: 'python:3.8-slim'  # Use a different name to indicate this is a new step
+    entrypoint: /bin/sh
+    args:
+      - '-c'
+      - 'trufflehog --regex --repo_path . https://github.com/shlokie1999/MoviePilot --json > trufflehog_scanReport.json'
 
-# # Step to save the TruffleHog report to a GCS bucket
-#   - name: 'gcr.io/cloud-builders/gsutil'
-#     args: ['cp', 'trufflehog_output.json', 'gs://your-gcs-bucket/trufflehog_reports/']
 
 #   - name: 'docker'
 #     args: 
@@ -36,7 +34,7 @@ steps:
 artifacts:
   objects:
     location: 'gs://trufflehog-scan/'  # Update this with your bucket name
-    paths: ['trufflehog_output.json']
+    paths: ['trufflehog_scanReport.json']
 
 
       
