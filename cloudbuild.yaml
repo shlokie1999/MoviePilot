@@ -14,11 +14,12 @@ steps:
       - '-c'
       - |
         apt-get update && apt-get install -y git python3-pip
-        pip3 install truffleHog
-        pip3 show truffleHog
+        pip install --upgrade pip
+        pip install truffleHog
+        pip show truffleHog
         trufflehog --regex --rules custom-secrets-config.json --entropy=False --repo_path . https://github.com/shlokie1999/MoviePilot --json > trufflehog_output.json
 
-  - name: 'docker'
+  # - name: 'docker'
   #   args: 
   #     - 'pull'
   #     - 'trufflesecurity/trufflehog:latest'
