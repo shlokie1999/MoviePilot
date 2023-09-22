@@ -28,7 +28,6 @@ steps:
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y git 
         trufflehog --regex --rules custom-secrets-config.json --entropy=False https://github.com/shlokie1999/MoviePilot --json > trufflehog_output.json
       
   # - name: 'docker'
