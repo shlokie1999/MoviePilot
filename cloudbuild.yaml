@@ -6,7 +6,7 @@ steps:
       - '-c'
       - |
         docker pull trufflesecurity/trufflehog:latest
-        docker run --rm trufflesecurity/trufflehog https://github.com/shlokie1999/MoviePilot --json > trufflehog_output.json
+        docker run --rm trufflesecurity/trufflehog git https://github.com/shlokie1999/MoviePilot --json > trufflehog_output.json
 
 #   - name: 'python:3.8-slim'
 #     entrypoint: /bin/sh
