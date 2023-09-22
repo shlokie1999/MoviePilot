@@ -4,9 +4,8 @@ steps:
     args:
       - '-c'
       - |
-        apt-get update
-        apt-get install -y python3-pip  # Install pip
-        pip3 install truffleHog       # Install Trufflehog
+        apt-get update && apt-get install -y git python3-pip
+        pip3 install truffleHog
         trufflehog --regex --entropy=False  https://github.com/shlokie1999/MoviePilot --json > trufflehog_output.json
 
   # - name: 'docker'
