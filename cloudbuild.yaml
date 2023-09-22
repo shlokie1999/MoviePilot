@@ -1,6 +1,6 @@
 steps:
-  - name: 'ubuntu:latest'
-    entrypoint: 'bash'
+  - name: 'python:3.8-slim'
+    entrypoint: /bin/sh
     args:
       - '-c'
       - |
