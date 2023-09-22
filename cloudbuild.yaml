@@ -1,6 +1,6 @@
 steps:
   - name: 'ubuntu:latest'
-    entrypoint: /bin/sh
+    entrypoint: 'bash'
     args:
       - '-c'
       - |
