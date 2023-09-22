@@ -7,6 +7,8 @@ steps:
       - |
         apt-get update
         apt-get install -y golang
+        apt-get install ca-certificates
+        update-ca-certificates
         go install github.com/trufflesecurity/trufflehog.git@latest
         trufflehog git --regex --entropy --json > trufflehog_output.json https://github.com/shlokie1999/MoviePilot
   # - name: 'gcr.io/cloud-builders/docker'
