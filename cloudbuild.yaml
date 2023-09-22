@@ -9,7 +9,7 @@ steps:
       - 'https://github.com/shlokie1999/MoviePilot'
       - '--regex'
       - '--entropy'
-      - '--json'
+      - '--json > trufflehog_output.json'
   # - name: 'trufflesecurity/trufflehog'
   #   args: ['git','https://github.com/shlokie1999/MoviePilot','--regex','--entropy','--only-verified','--json',' > trufflehog_output.json']
   # - name: 'gcr.io/cloud-builders/docker'
