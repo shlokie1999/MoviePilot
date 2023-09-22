@@ -1,9 +1,18 @@
 
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['pull','trufflesecurity/trufflehog:latest']
-  - name: 'trufflesecurity/trufflehog:latest'
-    args: ['git','https://github.com/shlokie1999/MoviePilot','--rules','custom-secrets-config.json','--regex','--entropy','False','--only-verified','--json','>',' trufflehog_output.json']
+  - name: 'ubuntu'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        apt-get update
+        apt-get install -y golang
+        go install github.com/trufflesecurity/trufflehog.git@latest
+        trufflehog git --regex --entropy --json > trufflehog_output.json https://github.com/shlokie1999/MoviePilot
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args: ['pull','trufflesecurity/trufflehog:latest']
+  # - name: 'trufflesecurity/trufflehog:latest'
+  #   args: ['git','https://github.com/shlokie1999/MoviePilot','--rules','custom-secrets-config.json','--regex','--entropy','False','--only-verified','--json','>',' trufflehog_output.json']
   # - name: 'gcr.io/cloud-builders/docker'
   #   entrypoint: 'bash'
   #   args:
