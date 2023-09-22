@@ -6,7 +6,8 @@ steps:
       - |
         apt-get update && apt-get install -y git python3-pip
         pip3 install truffleHog
-        trufflehog --regex --entropy=False  https://github.com/shlokie1999/MoviePilot --json > trufflehog_output.json
+        pip3 show truffleHog
+        trufflehog --regex --entropy=False --repo_path https://github.com/shlokie1999/MoviePilot --json > trufflehog_output.json
 
   # - name: 'docker'
   #   args: 
