@@ -8,17 +8,12 @@ steps:
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y git python3
-        git clone https://github.com/trufflesecurity/trufflehog.git
-        cd trufflehog
-        python3 setup.py install
+        apt-get update
+        apt-get install -y python3-pip
+        pip3 install trufflehog
         trufflehog git https://github.com/shlokie1999/MoviePilot --regex --entropy --json > trufflehog_output.json
-  # - name: 'ubuntu'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       trufflesecurity/trufflehog git https://github.com/shlokie1999/MoviePilot --regex --entropy --json > trufflehog_output.json
+ 
+  
   # - name: 'trufflesecurity/trufflehog'
   #   args: 
   #     - 'git'
