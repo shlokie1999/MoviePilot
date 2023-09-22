@@ -8,7 +8,7 @@ steps:
       - '-c'
       - |
         trufflehog --help
-        trufflehog github shlokie1999/MoviePilot --regex --entropy --json > trufflehog_output.json
+        trufflehog git https://github.com/shlokie1999/MoviePilot --regex --entropy custom-secrets-config.json --json > trufflehog_output.json
   
   # - name: 'trufflesecurity/trufflehog'
   #   args: 
