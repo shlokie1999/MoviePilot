@@ -1,17 +1,11 @@
-
 steps:
-  
   - name: 'gcr.io/cloud-builders/docker'
     args: ['pull','trufflesecurity/trufflehog']
-  - name: 'ubuntu'
-    entrypoint: 'bash'
+  - name: 'trufflesecurity/trufflehog'
+    entrypoint: '/bin/sh'
     args:
       - '-c'
       - |
-        apt-get update
-        apt-get install -y python3-pip
-        pip3 install trufflehog
-        export GIT_PYTHON_GIT_EXECUTABLE=$(which git)  # Explicitly set git executable path
         trufflehog git https://github.com/shlokie1999/MoviePilot --regex --entropy --json > trufflehog_output.json
   
   # - name: 'trufflesecurity/trufflehog'
