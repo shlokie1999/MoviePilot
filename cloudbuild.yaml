@@ -8,27 +8,27 @@ steps:
   #       trufflehog --help
   #       docker run --rm trufflesecurity/trufflehog github --repo https://github.com/shlokie1999/MoviePilot --rules custom-secrets-config.json --entropy=False --json > trufflehog_output.json
 
-  # - name: 'python:3.8-slim'
-  #   entrypoint: /bin/sh
-  #   args:
-  #     - '-c'
-  #     - |
-  #       apt-get update && apt-get install -y git python3-pip
-  #       pip3 install truffleHog
-  #       pip3 show truffleHog
-  #       trufflehog https://github.com/shlokie1999/MoviePilot --json > trufflehog_output.json
-
-  - name: 'docker'
-    args: 
-      - 'pull'
-      - 'trufflesecurity/trufflehog:latest'
-      
-  - name: 'trufflesecurity/trufflehog:latest'
-    entrypoint: 'bash'
+  - name: 'python:3.8-slim'
+    entrypoint: /bin/sh
     args:
       - '-c'
       - |
-        trufflehog --regex --rules custom-secrets-config.json --entropy=False https://github.com/shlokie1999/MoviePilot --json > trufflehog_output.json
+        apt-get update && apt-get install -y git python3-pip
+        pip3 install truffleHog
+        pip3 show truffleHog
+        trufflehog --regex --rules custom-secrets-config.json --entropy=False --repo_path . https://github.com/shlokie1999/MoviePilot --json > trufflehog_output.json
+
+  - name: 'docker'
+  #   args: 
+  #     - 'pull'
+  #     - 'trufflesecurity/trufflehog:latest'
+      
+  # - name: 'trufflesecurity/trufflehog:latest'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       trufflehog --regex --rules custom-secrets-config.json --entropy=False https://github.com/shlokie1999/MoviePilot --json > trufflehog_output.json
       
   # - name: 'docker'
   #   args: 
