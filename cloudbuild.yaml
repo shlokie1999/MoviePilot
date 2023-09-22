@@ -1,21 +1,32 @@
 steps:
-  - name: 'docker'
-    args: 
-      - 'pull'
-      - 'trufflesecurity/trufflehog:latest'
+  - name: 'ubuntu:latest'
+    entrypoint: /bin/sh
+    args:
+      - '-c'
+      - |
+        apt-get update
+        apt-get install -y python3-pip  # Install pip
+        pip3 install truffleHog       # Install Trufflehog
+        trufflehog --regex --entropy=False  https://github.com/shlokie1999/MoviePilot --json > trufflehog_output.json
+
+  # - name: 'docker'
+  #   args: 
+  #     - 'pull'
+  #     - 'trufflesecurity/trufflehog:latest'
       
-  - name: 'docker'
-    args: 
-      - 'run'
-      - '--rm'
-      - '-v'
-      - './src:/src'
-      - 'trufflesecurity/trufflehog'
-      - 'github'
-      - '--repo'
-      - 'https://github.com/shlokie1999/MoviePilot'
-      - '--json'
-      - '/src/trufflehog_output.json'
+  # - name: 'docker'
+  #   args: 
+  #     - 'run'
+  #     - '--rm'
+  #     - '-v'
+  #     - './src:/src'
+  #     - 'trufflesecurity/trufflehog'
+  #     - 'github'
+  #     - '--repo'
+  #     - 'https://github.com/shlokie1999/MoviePilot'
+  #     - '--json'
+  #     - '/src/trufflehog_output.json'
+      
 artifacts:
   objects:
     location: 'gs://trufflehog-scan/'  # Update this with your bucket name
