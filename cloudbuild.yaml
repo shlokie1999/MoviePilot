@@ -8,7 +8,18 @@ steps:
       - '-c'
       - |
         trufflehog --help
-        trufflehog git https://github.com/shlokie1999/MoviePilot --regex --entropy --config=custom-secrets-config.json --json > trufflehog_output.json
+        trufflehog git https://github.com/shlokie1999/MoviePilot --regex --entropy --json > trufflehog_output.json
+        
+  - name: 'gcr.io/cloud-builders/python'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if [ -s trufflehog_output.json ]; then
+          echo "Trufflehog found secrets. Sending alert to Slack..."
+        else
+          echo "Trufflehog found no secrets."
+        fi
   
   # - name: 'trufflesecurity/trufflehog'
   #   args: 
@@ -21,18 +32,7 @@ steps:
  
  
       
-  # - name: 'docker'
-  #   args: 
-  #     - 'run'
-  #     - '--rm'
-  #     - '-v'
-  #     - './src:/src'
-  #     - 'trufflesecurity/trufflehog'
-  #     - 'github'
-  #     - '--repo'
-  #     - 'https://github.com/shlokie1999/MoviePilot'
-  #     - '--json'
-  #     - '/src/trufflehog_output.json'
+
       
 artifacts:
   objects:
