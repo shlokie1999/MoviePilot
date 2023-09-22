@@ -4,7 +4,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['pull','trufflesecurity/trufflehog']
   - name: 'trufflesecurity/trufflehog'
-    args: ['git','https://github.com/shlokie1999/MoviePilot','--regex','--entropy','--only-verified','--json',' trufflehog_output.json']
+    args: ['git','https://github.com/shlokie1999/MoviePilot','--regex','--entropy','--only-verified','--json',' > trufflehog_output.json']
   # - name: 'gcr.io/cloud-builders/docker'
   #   entrypoint: 'bash'
   #   args:
