@@ -15,12 +15,18 @@ steps:
     args:
       - '-c'
       - |
+        apt-get update && apt-get install -y curl
         if [ -s trufflehog_output.json ]; then
           echo "Trufflehog found secrets. Sending alert to Slack..."
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"Trufflehog found secrets in the repository."}' $$_SLACK_WEBHOOK_URL
         else
           echo "Trufflehog found no secrets."
         fi
- 
+    secretEnv: ['_SLACK_WEBHOOK_URL']
+availableSecrets:
+  secretManager:
+  - versionName: projects/364895990307/secrets/sonarcloud-token/versions/7
+    env: '_SLACK_WEBHOOK_URL'
 artifacts:
   objects:
     location: 'gs://trufflehog-scan/'  # Update this with your bucket name
