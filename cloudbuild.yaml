@@ -6,7 +6,7 @@ steps:
     args:
       - '-c'
       - |
-        trufflehog git https://github.com/shlokie1999/MoviePilot --regex --entropy --only-verified --json > trufflehog_output.json
+        trufflehog git https://github.com/shlokie1999/MoviePilot --rules custom-secrets-config.json --regex --entropy --json > trufflehog_output.json
   
   # - name: 'trufflesecurity/trufflehog'
   #   args: 
