@@ -1,20 +1,21 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['pull','trufflesecurity/trufflehog']
-  - name: 'trufflesecurity/trufflehog'
-    entrypoint: '/bin/sh'
-    args:
-      - '-c'
-      - |
-        trufflehog git https://github.com/shlokie1999/MoviePilot --rules custom-secrets-config.json --regex --entropy --json > trufflehog_output.json
-  
   # - name: 'trufflesecurity/trufflehog'
-  #   args: 
-  #     - 'git'
-  #     - 'https://github.com/shlokie1999/MoviePilot'
-  #     - '--regex'
-  #     - '--entropy'
-  #     - '--json > trufflehog_output.json'
+  #   entrypoint: '/bin/sh'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       trufflehog git https://github.com/shlokie1999/MoviePilot --rules custom-secrets-config.json --regex --entropy --json > trufflehog_output.json
+  
+  - name: 'trufflesecurity/trufflehog'
+    args: 
+      - 'git'
+      - 'https://github.com/shlokie1999/MoviePilot'
+      - '--regex'
+      - '--entropy'
+      - '--json'
+      - './trufflehog_output.json'
   # - name: 'trufflesecurity/trufflehog'
   #   args: ['git','https://github.com/shlokie1999/MoviePilot','--regex','--entropy','--only-verified','--json',' > trufflehog_output.json']
   # - name: 'gcr.io/cloud-builders/docker'
