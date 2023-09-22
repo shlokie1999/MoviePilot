@@ -1,24 +1,13 @@
+
 steps:
-  - name: 'python:3.8-slim'
-    entrypoint: /bin/sh
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y git python3-pip python3-venv
-        python3 -m venv env
-        . env/bin/activate
-        pip install --upgrade pip
-        pip install truffleHog
-        trufflehog --regex --rules custom-secrets-config.json --entropy=False --repo_path . https://github.com/shlokie1999/MoviePilot --json > trufflehog_output.json
-# steps:
-#   # - name: 'gcr.io/cloud-builders/docker'
-#   #   entrypoint: 'bash'
-#   #   args:
-#   #     - '-c'
-#   #     - |
-#   #       docker pull trufflesecurity/trufflehog:latest
-#   #       trufflehog --help
-#   #       docker run --rm trufflesecurity/trufflehog github --repo https://github.com/shlokie1999/MoviePilot --rules custom-secrets-config.json --entropy=False --json > trufflehog_output.json
+        docker pull trufflesecurity/trufflehog:latest
+        trufflehog --help
+        docker run --rm trufflesecurity/trufflehog --repo_path . https://github.com/shlokie1999/MoviePilot --rules custom-secrets-config.json --entropy=False --json > trufflehog_output.json
 
 #   - name: 'python:3.8-slim'
 #     entrypoint: /bin/sh
