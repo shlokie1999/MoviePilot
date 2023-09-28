@@ -4,13 +4,13 @@ steps:
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y wget tar golang
+        apt-get update && apt-get install -y wget tar golang sudo
         wget https://github.com/zricethezav/gitleaks/releases/download/v8.15.3/gitleaks_8.15.3_linux_x64.tar.gz
         mkdir gitleaks
         tar -xvzf gitleaks_8.15.3_linux_x64.tar.gz
-        mv gitleaks_8.15.3_linux_x64 gitleaks
-        chmod +x gitleaks
-        mv gitleaks /usr/bin/
+        sudo mv gitleaks_8.15.3_linux_x64 gitleaks
+        sudo chmod +x gitleaks
+        sudo mv gitleaks /usr/bin/
         gitleaks -h
         gitleaks detect -s -v -r=/workspace/my_report.json
         ls
