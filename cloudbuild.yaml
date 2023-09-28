@@ -1,7 +1,5 @@
 steps:
-  # - name: 'gcr.io/cloud-builders/go'
-  #   args: ['install', '1.19.3']
-  - name: 'ubuntu'
+  - name: 'gcr.io/cloud-builders/go'
     entrypoint: 'bash'
     args:
       - '-c'
