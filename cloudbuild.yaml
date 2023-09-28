@@ -10,13 +10,12 @@ steps:
         wget https://github.com/zricethezav/gitleaks/releases/download/v8.15.3/gitleaks_8.15.3_linux_x64.tar.gz
         mkdir gitleaks
         tar -xvzf gitleaks_8.15.3_linux_x64.tar.gz
-        ls
         mv gitleaks_8.15.3_linux_x64 gitleaks
         chmod +x gitleaks
         mv gitleaks /usr/bin/
-        ls
         gitleaks -h
         gitleaks -s -v -r=/workspace/my_report.json
+        ls
 artifacts:
   objects:
     location: 'gs://gitleaks-scan-report/'  # Update this with your bucket name
