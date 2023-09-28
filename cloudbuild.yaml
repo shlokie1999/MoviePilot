@@ -12,7 +12,7 @@ steps:
         chmod +x gitleaks
         mv gitleaks /usr/bin/
         gitleaks -h
-        gitleaks detect -s -v -r=/workspace/my_report.json
+        gitleaks detect -s -r=/workspace/my_report.json
         ls
 artifacts:
   objects:
