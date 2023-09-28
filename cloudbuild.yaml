@@ -1,36 +1,26 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['pull','trufflesecurity/trufflehog']
-  
-  - name: 'trufflesecurity/trufflehog'
-    entrypoint: '/bin/sh'
-    args:
-      - '-c'
-      - |
-        trufflehog --help
-        trufflehog git https://github.com/shlokie1999/MoviePilot --regex --entropy --json > trufflehog_output.json
-        
+  - name: 'gcr.io/cloud-builders/go'
+    args: ['install', '1.19.3']
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y curl
-        if [ -s trufflehog_output.json ]; then
-          echo "Trufflehog found secrets. Sending alert to Slack..."
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Trufflehog found secrets in the repository."}' $$_SLACK_WEBHOOK_URL
-        else
-          echo "Trufflehog found no secrets."
-        fi
-    secretEnv: ['_SLACK_WEBHOOK_URL']
-availableSecrets:
-  secretManager:
-  - versionName: projects/364895990307/secrets/sonarcloud-token/versions/7
-    env: '_SLACK_WEBHOOK_URL'
+        apt-get update && apt-get install -y wget tar
+        wget https://github.com/zricethezav/gitleaks/releases/download/v8.15.3/gitleaks_8.15.3_linux_x64.tar.gz
+        mkdir gitleaks
+        tar -xvzf gitleaks_8.15.3_linux_x64.tar.gz
+        ls
+        mv gitleaks_8.15.3_linux_x64 gitleaks
+        sudo chmod +x gitleaks
+        sudo mv gitleaks /usr/bin/
+        ls
+        gitleaks -h
+        gitleaks -s -v -r=/workspace/my_report.json
 artifacts:
   objects:
-    location: 'gs://trufflehog-scan/'  # Update this with your bucket name
-    paths: ['trufflehog_output.json']
+    location: 'gs://gitleaks-scan-report/'  # Update this with your bucket name
+    paths: ['my_report.json']
 
 
       
