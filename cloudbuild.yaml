@@ -12,9 +12,9 @@ steps:
         chmod +x gitleaks
         mv gitleaks /usr/bin/
         gitleaks -h
-        pwd
-        gitleaks detect -s -r=/workspace/my_report.json
-        ls
+        gitleaks -s -v -r=/workspace/my_report.json
+        # gitleaks detect -s -r=/workspace/my_report.json
+        ls /workspace
 artifacts:
   objects:
     location: 'gs://gitleaks-scan-report/'  # Update this with your bucket name
