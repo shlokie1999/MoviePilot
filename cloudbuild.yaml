@@ -7,14 +7,27 @@ steps:
       
   - name: 'gcr.io/cloud-builders/docker'
     args: ['pull', 'zricethezav/gitleaks:latest']
-    
+
   - name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'bash'
-    args: 
+    args:
+      - 'run'
+      - '-v'
+      - '/workspace/source:/path'
+      - '-v'
+      - '/tmp:/tmp'
+      - 'zricethezav/gitleaks:latest'
+      - 'sh'
       - '-c'
-      - |
-        pwd
-        docker run -v /workspace/source:/path zricethezav/gitleaks:latest detect --source="/path" --report-path='/workspace' my_report.json
+      - 'gitleaks detect --source=/path --report-path=/tmp/my_report.json'
+
+    
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   entrypoint: 'bash'
+  #   args: 
+  #     - '-c'
+  #     - |
+  #       pwd
+  #       docker run -v /workspace/source:/path zricethezav/gitleaks:latest detect --source="/path" --report-path='/workspace' my_report.json
       
   # - name: 'ubuntu'
   #   entrypoint: 'bash'
