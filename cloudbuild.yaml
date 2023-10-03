@@ -27,8 +27,8 @@ steps:
       - 'detect'
       - '--source=/path'
       - '--exit-code=0
-      - '> my_report.json'
-      # - 'my_report.json'
+      - '--report-path=/workspace'
+      - 'my_report.json'
   # - name: 'ubuntu'
   #   entrypoint: 'bash'
   #   args:
