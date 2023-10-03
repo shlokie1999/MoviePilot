@@ -14,8 +14,7 @@ steps:
       - '-c'
       - |
         pwd
-        chmod +x /workspace
-        docker run -v /workspace/source:/path zricethezav/gitleaks:latest detect --source="/path" --report-path=/workspace
+        docker run -v /workspace/source:/path zricethezav/gitleaks:latest detect --source="/path" --report-path=my_report.json
       
   # - name: 'ubuntu'
   #   entrypoint: 'bash'
