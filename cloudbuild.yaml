@@ -9,7 +9,7 @@ steps:
     args: ['pull', 'zricethezav/gitleaks:latest']
     
   - name: 'gcr.io/cloud-builders/docker'
-  - entrypoint: 'bash'
+    entrypoint: 'bash'
     args: 
       - 'c'
       - |
