@@ -12,12 +12,11 @@ steps:
     args: 
       - 'run'
       - '-v'
-      - 'pwd'
       - '/workspace/source:/path'
       - 'zricethezav/gitleaks:latest'
       - 'detect'
       - '--source=/path'
-      - '--report-path=/workspace/my_report.json'
+      - '--report-path=/workspace'
       
   # - name: 'ubuntu'
   #   entrypoint: 'bash'
