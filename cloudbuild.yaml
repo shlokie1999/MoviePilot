@@ -1,32 +1,33 @@
 steps:
-  # - name: 'gcr.io/cloud-builders/git'
-  #   args:
-  #     - 'clone'
-  #     - 'https://github.com/shlokie1999/MoviePilot'
-  #     - '/workspace/source'
+  - name: 'gcr.io/cloud-builders/git'
+    args:
+      - 'clone'
+      - 'https://github.com/shlokie1999/MoviePilot'
+      - '/workspace/source'
       
   - name: 'gcr.io/cloud-builders/docker'
     args: ['pull', 'zricethezav/gitleaks:latest']
 
-  - name: 'zricethezav/gitleaks:latest'
+  # - name: 'zricethezav/gitleaks:latest'
+  #   args:
+  #     - 'detect'
+  #     - '--source'
+  #     - '.'
+  #     - '-v'
+  #     - '>'
+  #     - 'my_report.json'
+
+
+  - name: 'gcr.io/cloud-builders/docker'
     args:
-      - 'detect'
-      - '--source'
-      - '.'
+      - 'run'
       - '-v'
+      - '/workspace/source:/path'
+      - 'zricethezav/gitleaks:latest'
+      - 'detect'
+      - '--source=/path'
       - '>'
       - 'my_report.json'
-
-
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args:
-  #     - 'run'
-  #     - '-v'
-  #     - '/workspace/source:/path'
-  #     - 'zricethezav/gitleaks:latest'
-  #     - 'detect'
-  #     - '--source=/path'
-  #     - '--report-path=/workspace/my_report.json'
   # - name: 'ubuntu'
   #   entrypoint: 'bash'
   #   args:
