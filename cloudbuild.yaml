@@ -17,7 +17,7 @@ steps:
       - 'detect'
       - '--source=/path'
       - '--exit-code=0'
-      - '--report-path=/workspace/gitleaks_report.json'
+      # - '--report-path=/workspace/gitleaks_report.json'
       
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', 'gitleaks_report.json','gs://gitleaks-scan-report/gitleaks_report.json']   
