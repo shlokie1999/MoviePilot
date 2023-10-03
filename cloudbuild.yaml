@@ -26,7 +26,7 @@ steps:
       - 'zricethezav/gitleaks:latest'
       - 'detect'
       - '--source=/path'
-      - '--exit-code=0
+      - '--exit-code=0'
       - '--report-path=/workspace'
       - 'my_report.json'
   # - name: 'ubuntu'
