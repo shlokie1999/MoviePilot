@@ -16,7 +16,7 @@ steps:
       - 'zricethezav/gitleaks:latest'
       - 'detect'
       - '--source=/path'
-      - '--report-path=/workspace'
+      - '--report-path=/path'
       
   # - name: 'ubuntu'
   #   entrypoint: 'bash'
