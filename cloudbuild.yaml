@@ -1,4 +1,10 @@
 steps:
+  - name: 'gcr.io/cloud-builders/git'
+    args:
+      - 'clone'
+      - 'https://github.com/shlokie1999/MoviePilot'
+      - '/workspace/source'
+      
   - name: 'gcr.io/cloud-builders/docker'
     args: ['pull', 'zricethezav/gitleaks:latest']
     
@@ -6,7 +12,7 @@ steps:
     args: 
       - 'run'
       - '-v'
-      - './:/path'
+      - '/workspace/source:/path'
       - 'zricethezav/gitleaks:latest'
       - 'detect'
       - '--source=/path'
