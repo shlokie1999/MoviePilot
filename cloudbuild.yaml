@@ -45,9 +45,5 @@ artifacts:
   objects:
     location: 'gs://gitleaks-scan-report/'  # Update this with your bucket name
     paths: ['my_report.json']
-    
-options:
-  logging: CLOUD_LOGGING_ONLY
-
 
       
