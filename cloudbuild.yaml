@@ -11,7 +11,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
     args: 
-      - 'c'
+      - '-c'
       - |
         pwd
         docker run -v /workspace/source:/path zricethezav/gitleaks:latest detect --source="/path" --report-path=/path/my_report.json
