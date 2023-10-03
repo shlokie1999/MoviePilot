@@ -24,7 +24,7 @@ steps:
       - '-c'
       - | 
         pwd
-        ls
+        ls /workspace/source
         
   # - name: 'gcr.io/cloud-builders/gsutil'
   #   args: ['cp', 'gitleaks_report.json','gs://gitleaks-scan-report/gitleaks_report.json']   
