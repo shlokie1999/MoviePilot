@@ -17,7 +17,7 @@ steps:
       - 'detect'
       - '--source=/path'
       - '--exit-code=0'
-      - '--report-path=./gitleaks_report.json'
+      - '--report-path=gitleaks_report.json'
       
   - name: 'ubuntu'
     entrypoint: 'bash'
