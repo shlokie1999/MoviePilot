@@ -12,6 +12,7 @@ steps:
     args: 
       - 'run'
       - '-v'
+      - 'pwd'
       - '/workspace/source:/path'
       - 'zricethezav/gitleaks:latest'
       - 'detect'
