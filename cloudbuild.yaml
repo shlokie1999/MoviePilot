@@ -4,10 +4,6 @@ steps:
     args:
       - '-c'
       - |
-        # apt-get update && apt-get install -y wget tar golang git make
-        # git clone https://github.com/gitleaks/gitleaks.git
-        # cd gitleaks
-        # make build
         apt-get update && apt-get install -y wget tar golang 
         wget https://github.com/zricethezav/gitleaks/releases/download/v8.15.3/gitleaks_8.15.3_linux_x64.tar.gz
         mkdir gitleaks
@@ -15,7 +11,7 @@ steps:
         chmod +x gitleaks
         mv gitleaks /usr/bin/
         gitleaks -h
-        gitleaks detect --source . -v > report.json
+        gitleaks detect --source . -v > my_report.json
         ls /workspace
 artifacts:
   objects:
