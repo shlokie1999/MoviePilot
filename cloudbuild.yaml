@@ -17,7 +17,7 @@ steps:
       - 'detect'
       - '--source=/path'
       - '--exit-code=0'
-      # - '--report-path=/workspace/gitleaks_report.json'
+      - '--report-path=gs://gitleaks-scan-report/gitleaks_report.json'
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
@@ -43,9 +43,9 @@ steps:
   #       gitleaks -h
   #       gitleaks detect --source . -v > my_report.json
   #       ls /workspace
-artifacts:
-  objects:
-    location: 'gs://gitleaks-scan-report/'  # Update this with your bucket name
-    paths: ['my_report.json']
+# artifacts:
+#   objects:
+#     location: 'gs://gitleaks-scan-report/'  # Update this with your bucket name
+#     paths: ['my_report.json']
 
       
