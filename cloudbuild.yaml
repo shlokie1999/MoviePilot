@@ -13,12 +13,10 @@ steps:
       - 'run'
       - '-v'
       - '/workspace/source:/path'
-      - '-v'
-      - '/tmp:/tmp'
       - 'zricethezav/gitleaks:latest'
-      - 'sh'
-      - '-c'
-      - 'gitleaks detect --source=/path --report-path=/tmp/my_report.json'
+      - 'detect'
+      - '--source=/path'
+      - '--report-path=/workspace/my_report.json'
 
     
   # - name: 'gcr.io/cloud-builders/docker'
