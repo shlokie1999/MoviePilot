@@ -4,6 +4,12 @@ steps:
     args: ['build', '-t','us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest', '.']
     
   - name: 'us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest'
-    args: ['curl', '-s', '-L', '-O','/workspace/wss_agent.sh', 'https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh']
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        apt-get install -y sudo curl
+        sudo curl -s -L -O https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh
+    # args: ['curl', '-s', '-L', '-O','/workspace/wss_agent.sh', 'https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh']
 
       
