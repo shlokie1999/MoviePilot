@@ -1,52 +1,9 @@
-steps:
-  # - name: 'gcr.io/cloud-builders/git'
-  #   args:
-  #     - 'clone'
-  #     - 'https://github.com/shlokie1999/MoviePilot'
-  #     - '/workspace/source'
-      
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args: ['pull', 'zricethezav/gitleaks:latest']
 
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args:
-  #     - 'run'
-  #     - '-v'
-  #     - '/workspace/source:/path'
-  #     - 'zricethezav/gitleaks:latest'
-  #     - 'detect'
-  #     - '--source=/path'
-  #     - '--exit-code=0'
-  #     - '--report-path=gitleaks_report.json'
-      
-  # - name: 'ubuntu'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - | 
-  #       pwd
-  #       ls /workspace/source
-        
-  # # - name: 'gcr.io/cloud-builders/gsutil'
-  # #   args: ['cp', 'gitleaks_report.json','gs://gitleaks-scan-report/gitleaks_report.json']   
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t','us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest', '.']
     
-  - name: 'ubuntu'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        apt-get update && apt-get install -y wget tar golang 
-        wget https://github.com/zricethezav/gitleaks/releases/download/v8.15.3/gitleaks_8.15.3_linux_x64.tar.gz
-        mkdir gitleaks
-        tar -xvzf gitleaks_8.15.3_linux_x64.tar.gz
-        chmod +x gitleaks
-        mv gitleaks /usr/bin/
-        gitleaks -h
-        gitleaks detect --source . -v --report-path gitleaks-report.json
-        ls /workspace
-artifacts:
-  objects:
-    location: 'gs://gitleaks-scan-report/'  # Update this with your bucket name
-    paths: ['gitleaks_report.json']
+  - name: 'us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest'
+    args: ['curl', '-s', '-L', '-O', 'https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh']
 
       
