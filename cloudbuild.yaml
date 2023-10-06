@@ -10,9 +10,8 @@ steps:
         apt-get update && apt-get install -y pip curl
         curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend 
         chmod +x /usr/local/bin/mend
-        mend dep||dependencies
-        # mend auth login
-        
+        mend auth login  
+        mend dep || dependencies
 
   # - name: 'us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest'
   #   args: ['curl', '-s', '-L', '-O', 'https://raw.githubusercontent.com/whitesource/unified-agent-distribution/master/standAlone/wss-unified-agent.config']
