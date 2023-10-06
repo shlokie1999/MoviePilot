@@ -20,7 +20,8 @@ steps:
   #       # mend dep || dependencies
 
   - name: 'us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest'
-    args: ['curl', '-s', '-L', '-O', 'https://raw.githubusercontent.com/whitesource/unified-agent-distribution/master/standAlone/wss-unified-agent.config']
+    entrypoint: 'bash'
+    args: ['sudo','curl', '-s', '-L', '-O', 'https://raw.githubusercontent.com/whitesource/unified-agent-distribution/master/standAlone/wss-unified-agent.config']
   # - name: 'gcr.io/cloud-builders/curl'
   #   args: ['-J', '-L', '-O', 'https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar']
     
