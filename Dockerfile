@@ -44,3 +44,5 @@ RUN apt-get update \
 EXPOSE 9279
 VOLUME ["/config"]
 ENTRYPOINT [ "bash", "-c", "/app/start.sh & nginx -g 'daemon off;'" ]
+RUN ["chmod", "+x", "/app/start.sh"]
+
