@@ -10,10 +10,11 @@ steps:
         apt-get update && apt-get install -y pip curl
         curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend 
         chmod +x /usr/local/bin/mend
-        bash
-        mend auth info
-        mend auth login https://saas.mend.io
-        mend dep
+        mend dep -h
+        # bash
+        # mend auth info
+        # mend auth login 
+        # mend dep
         # mend auth login  
         # mend dep || dependencies
 
