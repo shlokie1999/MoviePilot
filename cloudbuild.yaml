@@ -1,42 +1,9 @@
-
 steps:
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args: ['build', '-t','us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest', '.']
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y pip curl
-        curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend 
-        chmod +x /usr/local/bin/mend
-        mend dep -h
-        mend dep -d . 
-        # bash
-        # mend auth info
-        # mend auth login 
-        # mend dep
-        # mend auth login  
-        # mend dep || dependencies
-
-  # - name: 'us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest'
-  #   args: ['curl', '-s', '-L', '-O', 'https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh']
-    # args: ['curl', '-s', '-L', '-O', 'https://raw.githubusercontent.com/whitesource/unified-agent-distribution/master/standAlone/wss-unified-agent.config']
-  # - name: 'gcr.io/cloud-builders/curl'
-  #   args: ['-J', '-L', '-O', 'https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar']
-    
-  # - name: 'us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest'
-  #   args: ['curl','-LJO', 'https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh']
-
-  
-    # entrypoint: 'bash'
-    # args:
-    #   - '-c'
-    #   - |
-    #     apt-get install -y sudo curl
-    #     sudo curl -s -L -O https://raw.githubusercontent.com/whitesource/unified-agent-distribution/master/standAlone/wss-unified-agent.config
-    #     sudo curl -s -L -O https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh
+        aa-status
+        # apt-get update && apt-get install -y pip curl
         
-    # args: ['curl', '-s', '-L', '-O','/workspace/wss_agent.sh', 'https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh']
-
-      
