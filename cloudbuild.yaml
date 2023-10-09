@@ -4,6 +4,8 @@ steps:
     args:
       - '-c'
       - |
+        apt-get update && apt-get install -y apparmor-profiles
+        apt install -y apparmor-utils
         aa-status
-        # apt-get update && apt-get install -y pip curl
+
         
