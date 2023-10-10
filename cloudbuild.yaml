@@ -3,18 +3,20 @@ steps:
     args: ['build', '-t', 'us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest', '.']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest']
-  - name: 'ubuntu'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        apt -y upgrade
-        apt-get update && apt-get install -y apparmor-utils apparmor-profiles apparmor-notify apparmor-profiles-extra
+  # - name: 'ubuntu'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       apt -y upgrade
+  #       apt-get update && apt-get install -y apparmor-utils apparmor-profiles apparmor-notify apparmor-profiles-extra
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
+        apt -y upgrade
+        apt-get update && apt-get install -y apparmor-utils apparmor-profiles apparmor-notify apparmor-profiles-extra docker-ce docker-ce-cli containerd.io
         ./test1.sh
         cp docker-deny /etc/apparmor.d/docker-deny
         apparmor_parser /etc/apparmor.d/docker-deny
