@@ -16,7 +16,10 @@ steps:
       - '-c'
       - |
         ./test1.sh
-        docker run --rm -i us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest
+        cp docker-deny /etc/apparmor.d/docker-deny
+        apparmor_parser /etc/apparmor.d/docker-deny
+        aa-enforce /etc/apparmor.d/docker-deny
+        docker run --rm -i --security-opt apparmor=docker-deny us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest
         pwd
         ls   
         
