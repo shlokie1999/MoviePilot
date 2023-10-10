@@ -1,8 +1,8 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest', '.']
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest']
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args: ['build', '-t', 'us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest', '.']
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest']
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
@@ -10,7 +10,8 @@ steps:
       - |
         apt-get update && apt-get install -y apparmor-profiles
         apt-get install -y apparmor-utils
-        apt-get install systemd
+        apt -y upgrade 
+        apt-get install -y systemd
         systemctl enable --now apparmor.service
         aa-enabled
         aa-status
