@@ -10,7 +10,7 @@ steps:
       - |
         apt-get update && apt-get install -y apparmor-profiles
         apt-get install -y apparmor-utils
-        apt-get install -y lupin-support
+        apt-get install lupin-support
         echo "GRUB_CMDLINE_LINUX_DEFAULT=\"$(grep GRUB_CMDLINE_LINUX_DEFAULT /etc/default/grub | sed 's/"$/ apparmor=1 security=apparmor"/')\"" | tee /etc/default/grub
         grub-mkconfig -o /boot/grub/grub.cfg
         update-grub
