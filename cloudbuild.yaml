@@ -17,6 +17,7 @@ steps:
       - |
         apt -y upgrade
         apt-get update && apt-get install -y apparmor-utils apparmor-profiles apparmor-notify apparmor-profiles-extra docker-ce docker-ce-cli containerd.io
+        docker run --rm -it --security-opt apparmor=docker-default hello-world
         ./test1.sh
         cp docker-deny /etc/apparmor.d/docker-deny
         apparmor_parser /etc/apparmor.d/docker-deny
