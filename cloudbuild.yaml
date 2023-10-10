@@ -13,7 +13,7 @@ steps:
         /etc/init.d/apparmor start
         mount -tsecurityfs securityfs /sys/kernel/security
         cat /sys/kernel/security/apparmor/profiles
-        docker run --rm -i --security-opt apparmor=docker-default us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest
+        # docker run --rm -i --security-opt apparmor=docker-default us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest
         ./test1.sh
         aa-status
         aa-enabled
