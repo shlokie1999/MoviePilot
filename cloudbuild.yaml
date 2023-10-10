@@ -10,10 +10,7 @@ steps:
       - |
         apt -y upgrade
         apt-get update && apt-get install -y apparmor-utils apparmor-profiles apparmor-notify apparmor-profiles-extra systemd
-        systemctl status apparmor
-        systemctl start apparmor
-        systemctl enable apparmor
         aa-enabled
         aa-status
-
+        
         
