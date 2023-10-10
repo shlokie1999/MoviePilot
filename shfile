@@ -1,0 +1,10 @@
+abi <abi/3.0>,
+
+include <tunables/global>
+
+/home/vsts/work/1/s/test1.sh {
+include <abstractions/base>
+include <abstractions/bash>
+/home/vsts/work/1/s/test1.sh rw,
+/usr/bin/bash ix,
+}
