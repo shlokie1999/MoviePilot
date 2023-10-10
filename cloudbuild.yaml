@@ -11,6 +11,8 @@ steps:
         apt -y upgrade
         apt-get update && apt-get install -y apparmor-utils apparmor-profiles apparmor-notify apparmor-profiles-extra docker-ce docker-ce-cli containerd.io
         /etc/init.d/apparmor start
+        mount -tsecurityfs securityfs /sys/kernel/security
+        cat /sys/kernel/security/apparmor/profiles
         docker run --rm -i --security-opt apparmor=docker-default hello-world
         ./test1.sh
         aa-status
