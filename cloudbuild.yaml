@@ -9,9 +9,7 @@ steps:
       - '-c'
       - |
         apt -y upgrade
-        apt-get update && apt-get install -y apparmor-utils apparmor-profiles apparmor-notify apparmor-profiles-extra systemd
-        aa-enabled
-        aa-status
+        apt-get update && apt-get install -y apparmor-utils apparmor-profiles apparmor-notify apparmor-profiles-extra
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
     args:
