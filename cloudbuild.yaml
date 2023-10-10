@@ -10,7 +10,9 @@ steps:
       - |
         apt-get update && apt-get install -y apparmor-profiles
         apt-get install -y apparmor-utils
-        aa-status
+        apt-get install systemd
+        systemctl enable --now apparmor.service
         aa-enabled
+        aa-status
 
         
