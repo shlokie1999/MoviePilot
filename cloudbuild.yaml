@@ -13,15 +13,21 @@ steps:
         /etc/init.d/apparmor start
         mount -tsecurityfs securityfs /sys/kernel/security
         cat /sys/kernel/security/apparmor/profiles
-        docker run --rm -i --security-opt apparmor=docker-default hello-world
+        docker run --rm -i --security-opt apparmor=docker-default us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest
         ./test1.sh
         aa-status
         aa-enabled
         cp docker-deny /etc/apparmor.d/docker-deny
         apparmor_parser /etc/apparmor.d/docker-deny
         aa-enforce /etc/apparmor.d/docker-deny
+        cp shfile /etc/apparmor.d/shfile
+        apparmor_parser /etc/apparmor.d/shfile
+        aa-enforce /etc/apparmor.d/shfile
         docker run --rm -i --security-opt apparmor=docker-deny us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest
         pwd
         ls   
+        test1.sh
+        pwd
+        ls
         
         
