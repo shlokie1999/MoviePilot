@@ -1,35 +1,42 @@
 steps:
+
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest', '.']
-    
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest']
-    
-  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t','us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest', '.']
+  
+
+  - name: 'ubuntu'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        apt -y upgrade
-        apt-get update && apt-get install -y apparmor-utils apparmor-profiles apparmor-notify apparmor-profiles-extra docker-ce docker-ce-cli containerd.io
-        /etc/init.d/apparmor start
-        mount -tsecurityfs securityfs /sys/kernel/security
-        cat /sys/kernel/security/apparmor/profiles
-        # docker run --rm -i --security-opt apparmor=docker-default us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest
-        ./test1.sh
-        aa-status
-        aa-enabled
-        cp docker-deny /etc/apparmor.d/docker-deny
-        apparmor_parser /etc/apparmor.d/docker-deny
-        aa-enforce /etc/apparmor.d/docker-deny
-        docker run --rm -i --security-opt apparmor=docker-deny us-central1-docker.pkg.dev/mcmp-integration-qa/apparmor/appimage:latest
-        pwd
-        ls 
-        cp shfile /etc/apparmor.d/shfile
-        apparmor_parser /etc/apparmor.d/shfile
-        aa-enforce /etc/apparmor.d/shfile
-        ./test1.sh
-        pwd
-        ls
+        apt-get update && apt-get install -y pip curl
+        curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend 
+        chmod +x /usr/local/bin/mend
+        mend image us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest --filename report.json --format json --no-upload
         
- 
+        # bash
+        # mend auth info
+        # mend auth login 
+        # mend dep
+        # mend auth login  
+        # mend dep || dependencies
+
+  # - name: 'us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest'
+  #   args: ['curl', '-s', '-L', '-O', 'https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh']
+    # args: ['curl', '-s', '-L', '-O', 'https://raw.githubusercontent.com/whitesource/unified-agent-distribution/master/standAlone/wss-unified-agent.config']
+  # - name: 'gcr.io/cloud-builders/curl'
+  #   args: ['-J', '-L', '-O', 'https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar']
+    
+  # - name: 'us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest'
+  #   args: ['curl','-LJO', 'https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh']
+
+  
+    # entrypoint: 'bash'
+    # args:
+    #   - '-c'
+    #   - |
+    #     apt-get install -y sudo curl
+    #     sudo curl -s -L -O https://raw.githubusercontent.com/whitesource/unified-agent-distribution/master/standAlone/wss-unified-agent.config
+    #     sudo curl -s -L -O https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh
+        
+    # args: ['curl', '-s', '-L', '-O','/workspace/wss_agent.sh', 'https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh']
