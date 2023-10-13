@@ -12,7 +12,7 @@ steps:
         apt-get update && apt-get install -y pip curl
         curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend 
         chmod +x /usr/local/bin/mend
-        mend image us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest --filename report.json --format json --no-upload
+        mend image us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest --filename report.json --format json --no-upload --offline
         
         # bash
         # mend auth info
