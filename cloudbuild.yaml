@@ -9,7 +9,9 @@ steps:
         chmod +x ./snyk
         mv ./snyk /usr/local/bin/ 
         snyk auth $$_API_TOKEN
-        snyk code test --org=$$_ORD_ID
+        snyk code test --help
+        snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json
+        cat snyk_report.json
     secretEnv: ['_API_TOKEN','_ORG_ID']
         
 availableSecrets:
