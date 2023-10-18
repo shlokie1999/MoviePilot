@@ -1,52 +1,21 @@
 steps:
-  # - name: 'gcr.io/cloud-builders/npm'
-  #   args: ['install']
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t','us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest', '.']
-  
-
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
         apt-get update && apt-get install -y pip curl
-        curl https://downloads.mend.io/cli/linux_amd64/mend -o /usr/local/bin/mend 
-        chmod +x /usr/local/bin/mend
-        mend image us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest --offline
-        mend image us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest --filename report.json --format json --no-upload --offline
-  #   env: 
-  #   # - 'WS_APIKEY=$APIKEY' #add your apiKey here using: https://cloud.google.com/build/docs/securing-builds/use-secrets
-  #   # - 'WS_USERKEY=$USERKEY' #add your userKey here using: https://cloud.google.com/build/docs/securing-builds/use-secrets
-  #   - 'WS_WSS_URL=https://saas.mend.io/agent'
-  #   - 'WS_PRODUCTNAME=$PROJECT_ID'
-  #   - 'WS_PROJECTNAME=$BUILD_ID'
+        curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
+        chmod +x ./snyk
+        mv ./snyk /usr/local/bin/ 
+        snyk auth $$_API_TOKEN
+        snyk code test --org=$$_ORD_ID
+    secretEnv: ['_API_TOKEN','_ORG_ID']
         
-        # bash
-        # mend auth info
-        # mend auth login 
-        # mend dep
-        # mend auth login  
-        # mend dep || dependencies
-
-  # - name: 'us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest'
-  #   args: ['curl', '-s', '-L', '-O', 'https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh']
-    # args: ['curl', '-s', '-L', '-O', 'https://raw.githubusercontent.com/whitesource/unified-agent-distribution/master/standAlone/wss-unified-agent.config']
-  - name: 'gcr.io/cloud-builders/curl'
-    args: ['-J', '-L', '-O', 'https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar']
-  - name: 'docker.io/openjdk'
-    args: ['java','-jar','wss-unified-agent.jar']
-    
-  # - name: 'us-central1-docker.pkg.dev/mcmp-integration-qa/mend-bolt/myimage:latest'
-  #   args: ['curl','-LJO', 'https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh']
-
-  
-    # entrypoint: 'bash'
-    # args:
-    #   - '-c'
-    #   - |
-    #     apt-get install -y sudo curl
-    #     sudo curl -s -L -O https://raw.githubusercontent.com/whitesource/unified-agent-distribution/master/standAlone/wss-unified-agent.config
-    #     sudo curl -s -L -O https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh
+availableSecrets:
+  secretManager:
+  - versionName: projects/364895990307/secrets/mailgun-domain/versions/6
+    env: '_API_TOKEN'
+  - versionName: projects/364895990307/secrets/sonarcloud-token/versions/8
+    env: '_ORG_ID'
         
-    # args: ['curl', '-s', '-L', '-O','/workspace/wss_agent.sh', 'https://github.com/whitesource/unified-agent-distribution/raw/master/standAlone/wss_agent.sh']
