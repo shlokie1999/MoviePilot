@@ -4,12 +4,13 @@ steps:
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y pip curl
+        apt-get update && apt-get install -y pip npm curl
         curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
         chmod +x ./snyk
         mv ./snyk /usr/local/bin/ 
         snyk auth $$_API_TOKEN
         snyk code test --help
+        npm install snyk-to-html -g
         snyk code test --org=$$_ORD_ID --json | snyk-to-HTML -o results-code.html
         # snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json
         # cat snyk_report.json
