@@ -14,12 +14,14 @@ steps:
         snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json
         cat snyk_report.json
         snyk-to-html -i snyk_report.json -o snyk_report.html
-    secretEnv: ['_API_TOKEN','_ORG_ID']
-        
+    secretEnv: ['_API_TOKEN','_ORG_ID']    
 availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/mailgun-domain/versions/6
     env: '_API_TOKEN'
   - versionName: projects/364895990307/secrets/sonarcloud-token/versions/8
     env: '_ORG_ID'
-        
+artifacts:
+  objects:
+    location: gs://snyk_scan
+    paths: [snyk_report.html]       
