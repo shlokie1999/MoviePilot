@@ -10,9 +10,10 @@ steps:
         mv ./snyk /usr/local/bin/ 
         snyk auth $$_API_TOKEN
         snyk code test --help
-        snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json
-        cat snyk_report.json
-        snyk-to-html -i snyk_report.json -o snyk_report.html
+        snyk code test --org=$$_ORD_ID --json | snyk-to-HTML -o results-code.html
+        # snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json
+        # cat snyk_report.json
+        # snyk-to-html -i snyk_report.json -o snyk_report.html
     secretEnv: ['_API_TOKEN','_ORG_ID']
         
 availableSecrets:
