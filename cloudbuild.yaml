@@ -11,17 +11,24 @@ steps:
         snyk auth $$_API_TOKEN
         snyk code test --help
         npm install snyk-to-html -g
-        snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json
+        snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json 
         cat snyk_report.json
         snyk-to-html -i snyk_report.json -o snyk_report.html
-    secretEnv: ['_API_TOKEN','_ORG_ID']
-  - name: 'ubuntu'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
+        snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json --severity-threshold=high
         snyk test --all-projects --org=$$_ORD_ID
-    secretEnv: ['_ORG_ID']
+    secretEnv: ['_API_TOKEN','_ORG_ID']
+  # - name: 'ubuntu'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       apt-get update && apt-get install -y pip npm curl
+  #       curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
+  #       chmod +x ./snyk
+  #       mv ./snyk /usr/local/bin/ 
+  #       snyk auth $$_API_TOKEN
+  #       snyk test --all-projects --org=$$_ORD_ID 
+  #   secretEnv: ['_API_TOKEN','_ORG_ID']
 availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/mailgun-domain/versions/6
