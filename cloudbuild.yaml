@@ -12,7 +12,7 @@ steps:
         snyk code test --help
         snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json
         cat snyk_report.json
-        snyk-to-html -i results.json -o results.html
+        snyk-to-html -i snyk_report.json -o snyk_report.html
     secretEnv: ['_API_TOKEN','_ORG_ID']
         
 availableSecrets:
