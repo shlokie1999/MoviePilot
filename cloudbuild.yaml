@@ -4,8 +4,8 @@ steps:
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y pip3 npm curl
-        pip3 install -r requirements.txt
+        apt-get update && apt-get install -y pip npm curl
+        pip install -r requirements.txt
         curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
         chmod +x ./snyk
         mv ./snyk /usr/local/bin/ 
