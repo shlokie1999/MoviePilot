@@ -16,8 +16,7 @@ steps:
         cat snyk_report.json
         snyk-to-html -i snyk_report.json -o snyk_report.html
         snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json --severity-threshold=high 
-        snyk test /workspace/MoviePilot
-        snyk fix --file=requirements.txt --dry-run
+        snyk wizard
     secretEnv: ['_API_TOKEN','_ORG_ID']
 availableSecrets:
   secretManager:
