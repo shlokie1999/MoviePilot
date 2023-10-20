@@ -16,8 +16,7 @@ steps:
         cat snyk_report.json
         snyk-to-html -i snyk_report.json -o snyk_report.html
         snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json --severity-threshold=high 
-        npm i @snyk/cli-protect-upgrade
-        npx @snyk/cli-protect-upgrad
+        snyk fix --file=requirements.txt
     secretEnv: ['_API_TOKEN','_ORG_ID']
   # - name: 'ubuntu'
   #   entrypoint: 'bash'
