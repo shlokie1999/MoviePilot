@@ -29,7 +29,7 @@ steps:
   #       chmod +x ./snyk
   #       mv ./snyk /usr/local/bin/ 
   #       snyk auth $$_API_TOKEN
-  #       snyk test --all-projects --org=$$_ORD_ID 
+  #       snyk test --all-projects --org=$$_ORD_ID  
   #   secretEnv: ['_API_TOKEN','_ORG_ID']
 availableSecrets:
   secretManager:
