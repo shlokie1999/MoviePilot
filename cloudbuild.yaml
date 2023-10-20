@@ -5,6 +5,7 @@ steps:
       - '-c'
       - |
         apt-get update && apt-get install -y pip npm curl
+        pip install -r requirements.txt
         curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
         chmod +x ./snyk
         mv ./snyk /usr/local/bin/ 
@@ -15,7 +16,7 @@ steps:
         cat snyk_report.json
         snyk-to-html -i snyk_report.json -o snyk_report.html
         snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json --severity-threshold=high
-        snyk test --all-projects --org=$$_ORD_ID
+        snyk test --file=requirements.txt --org=$$_ORD_ID
     secretEnv: ['_API_TOKEN','_ORG_ID']
   # - name: 'ubuntu'
   #   entrypoint: 'bash'
