@@ -15,7 +15,6 @@ steps:
         snyk test --file=requirements.txt --command=python3 --allow-missing --severity-threshold=critical
         snyk-to-html -i snyk_report.json -o snyk_report.html
         snyk fix --file=requirements.txt --command=python3 --allow-missing
-        snyk test --file=requirements.txt --command=python3 --allow-missing
     secretEnv: ['_API_TOKEN','_ORG_ID']
   # - name: 'ubuntu'
   #   entrypoint: 'bash'
