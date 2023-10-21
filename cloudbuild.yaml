@@ -10,14 +10,32 @@ steps:
         chmod +x ./snyk
         mv ./snyk /usr/local/bin/ 
         snyk auth $$_API_TOKEN
-        snyk code test --help
         npm install snyk-to-html -g
-        snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json 
-        cat snyk_report.json
+        snyk test --file=requirements.txt --command=python3 --allow-missing --json-file-output=snyk_report.json
+        snyk test --file=requirements.txt --command=python3 --allow-missing --severity-threshold=critical
         snyk-to-html -i snyk_report.json -o snyk_report.html
+        snyk fix --file=requirements.txt
         snyk test --file=requirements.txt --command=python3 --allow-missing
-        snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json --severity-threshold=high 
     secretEnv: ['_API_TOKEN','_ORG_ID']
+  # - name: 'ubuntu'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       apt-get update && apt-get install -y pip npm curl
+  #       pip install -r requirements.txt
+  #       curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
+  #       chmod +x ./snyk
+  #       mv ./snyk /usr/local/bin/ 
+  #       snyk auth $$_API_TOKEN
+  #       snyk code test --help
+  #       npm install snyk-to-html -g
+  #       snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json 
+  #       cat snyk_report.json
+  #       snyk-to-html -i snyk_report.json -o snyk_report.html
+  #       snyk test --file=requirements.txt --command=python3 --allow-missing
+  #       snyk code test --org=$$_ORD_ID --json-file-output=snyk_report.json --severity-threshold=high 
+        
 availableSecrets:
   secretManager:
   - versionName: projects/364895990307/secrets/mailgun-domain/versions/6
